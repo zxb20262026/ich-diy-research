@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>非遗IP衍生 · 高IP价值×低DIY适配品类</title>
+<style>
+  :root {
+    --bg: #0d1117; --card: #161b22; --border: #30363d;
+    --text: #c9d1d9; --text2: #8b949e;
+    --green: #3fb950; --orange: #d29922; --red: #f85149;
+    --blue: #58a6ff; --purple: #bc8cff; --cyan: #39d2c0; --gold: #e3b341; --pink: #f778ba;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; line-height:1.6; }
+  .container { max-width:1200px; margin:0 auto; padding:20px; }
+  .header { background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460); border-bottom:3px solid var(--gold); padding:40px 20px; text-align:center; }
+  .header h1 { font-size:2em; background:linear-gradient(135deg,var(--gold),#f0c060,var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .section-title { font-size:1.4em; margin:36px 0 18px; padding-bottom:8px; border-bottom:2px solid var(--border); display:flex; align-items:center; gap:10px; }
+
+  /* Strategy box */
+  .strategy-box { background:linear-gradient(135deg,rgba(88,166,255,0.06),rgba(88,166,255,0.02)); border:2px solid rgba(88,166,255,0.3); border-radius:12px; padding:24px; margin:20px 0; }
+  .strategy-box h3 { font-size:1.1em; color:var(--gold); margin-bottom:12px; }
+
+  /* Matrix table */
+  .matrix-table { width:100%; border-collapse:collapse; font-size:0.88em; margin:14px 0; }
+  .matrix-table th { background:#1c2533; padding:10px 12px; text-align:left; font-weight:600; border-bottom:2px solid var(--border); font-size:0.82em; text-transform:uppercase; }
+  .matrix-table td { padding:10px 12px; border-bottom:1px solid rgba(48,54,61,0.5); vertical-align:top; }
+  .matrix-table tr:hover { background:rgba(255,255,255,0.02); }
+  .matrix-table tr:last-child td { border-bottom:none; }
+
+  .tag { display:inline-block; padding:2px 8px; border-radius:8px; font-size:0.73em; font-weight:600; }
+  .tag-diy-high { background:rgba(63,185,80,0.2); color:var(--green); }
+  .tag-diy-low { background:rgba(248,81,73,0.2); color:var(--red); }
+  .tag-ip-high { background:rgba(88,166,255,0.2); color:var(--blue); }
+  .tag-ip-extreme { background:rgba(227,179,65,0.2); color:var(--gold); }
+
+  /* Idea cards */
+  .idea-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:14px; margin:14px 0; }
+  .idea-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px; transition:transform 0.2s; }
+  .idea-card:hover { transform:translateY(-2px); border-color:var(--gold); }
+  .idea-card .ic-header { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .idea-card .ic-name { font-weight:700; font-size:1.05em; }
+  .idea-card .ic-why { font-size:0.82em; color:var(--orange); margin-bottom:6px; }
+  .idea-card .ic-ideas { font-size:0.85em; color:var(--text2); line-height:1.6; }
+  .idea-card .ic-ideas span { color:var(--cyan); }
+
+  .highlight { color:var(--gold); font-weight:600; }
+  .warn { color:var(--red); }
+
+  .footer { text-align:center; padding:30px; color:var(--text2); font-size:0.82em; border-top:1px solid var(--border); margin-top:40px; }
+  .footer a { color:var(--blue); text-decoration:none; }
+
+  @media (max-width:768px) {
+    .idea-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📦 举一反三 · 高IP × 低DIY品类矩阵</h1>
+  <p style="color:var(--text2);">宋锦方法论复制：核心技术门槛高→不适合DIY材料包→走IP授权+现代载体路线</p>
+</div>
+
+<!-- 🔗 项目导航 -->
+<div style="background:var(--card);border-bottom:1px solid var(--border);padding:10px 0;text-align:center;position:sticky;top:0;z-index:100;">
+  <a href="index.html" style="color:var(--text2);text-decoration:none;margin:0 12px;font-size:0.85em;font-weight:600;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text2)'">🏠 首页</a>
+  <span style="color:var(--border);">|</span>
+  <a href="report.html" style="color:var(--text2);text-decoration:none;margin:0 12px;font-size:0.85em;font-weight:600;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text2)'">🗺️ 双赛道总览</a>
+  <span style="color:var(--border);">|</span>
+  <a href="competitor-research.html" style="color:var(--text2);text-decoration:none;margin:0 12px;font-size:0.85em;font-weight:600;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text2)'">🔬 8品类竞品</a>
+  <span style="color:var(--border);">|</span>
+  <a href="seasonal-analysis.html" style="color:var(--text2);text-decoration:none;margin:0 12px;font-size:0.85em;font-weight:600;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text2)'">📅 季节性分析</a>
+  <span style="color:var(--border);">|</span>
+  <a href="high-ip-low-diy.html" style="color:var(--gold);text-decoration:none;margin:0 12px;font-size:0.85em;font-weight:700;">📦 高IP低DIY</a>
+</div>
+
+<div class="container">
+
+  <!-- ============ CORE METHODOLOGY ============ -->
+  <div class="strategy-box" style="border-color:var(--gold);">
+    <h3>🧠 宋锦方法论：可复制的判断公式</h3>
+    <p style="font-size:0.9em;line-height:1.8;">
+      <span class="highlight">判断逻辑：</span>
+      一个非遗品类是否适合方向二（IP成品），看三个条件是否同时满足：<br>
+      ① <span class="warn">核心技术门槛高</span>（需专业设备/多年训练/特殊环境）→ 不适合DIY<br>
+      ② <span style="color:var(--blue);">视觉辨识度极强</span>（纹样/造型/色彩一眼可辨）→ IP价值高<br>
+      ③ <span style="color:var(--green);">可数字化/可平面化提取</span>（纹样/图案/造型可脱离原工艺独立存在）→ 能降维应用<br>
+      <br>
+      <span class="highlight">转化公式：</span>非遗IP × 现代载体 = 新消费商品<br>
+      <span style="color:var(--text2);">例：宋锦纹样 × T恤/帆布包/手机壳 → 国潮文创</span>
+    </p>
+  </div>
+
+  <!-- ============ MASTER MATRIX ============ -->
+  <h2 class="section-title">📊 总矩阵：传统美术+传统技艺中「高IP×低DIY」品类一览</h2>
+
+  <table class="matrix-table">
+    <thead>
+      <tr>
+        <th>品类</th><th>大类</th><th>DIY适配</th><th>IP价值</th>
+        <th>核心门槛</th><th>IP转化方向</th><th>电商潜力</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(227,179,65,0.04);">
+        <td style="font-weight:700;">🧣 宋锦</td><td>传统技艺</td><td><span class="tag tag-diy-low">⭐ 极低</span></td><td><span class="tag tag-ip-extreme">⭐⭐⭐⭐⭐</span></td>
+        <td>需要提花织机</td><td>纹样IP → 服饰/文创/家居</td><td>🔥 高</td>
+      </tr>
+      <tr style="background:rgba(227,179,65,0.03);">
+        <td style="font-weight:700;">🧣 云锦</td><td>传统技艺</td><td><span class="tag tag-diy-low">⭐ 极低</span></td><td><span class="tag tag-ip-extreme">⭐⭐⭐⭐⭐</span></td>
+        <td>大花楼织机+双人操作</td><td>皇家纹样IP → 高端礼品/服饰</td><td>🔥 高</td>
+      </tr>
+      <tr style="background:rgba(227,179,65,0.02);">
+        <td style="font-weight:700;">🧣 蜀锦 / 壮锦</td><td>传统技艺</td><td><span class="tag tag-diy-low">⭐ 极低</span></td><td><span class="tag tag-ip-high">⭐⭐⭐⭐</span></td>
+        <td>织机+地域性</td><td>民族纹样IP → 服饰/包袋/家居</td><td>中高</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">🪑 漆器</td><td>传统技艺</td><td><span class="tag tag-diy-low">⭐ 极低</span></td><td><span class="tag tag-ip-extreme">⭐⭐⭐⭐⭐</span></td>
+        <td>大漆过敏风险+工期数月</td><td>漆器美学 → 餐具/茶具/装饰</td><td>🔥 高</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">💎 玉雕</td><td>传统美术</td><td><span class="tag tag-diy-low">⭐ 极低</span></td><td><span class="tag tag-ip-high">⭐⭐⭐⭐</span></td>
+        <td>专业工具+数年功底</td><td>玉雕纹样 → 饰品/摆件印花</td><td>中</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">🪨 石雕（寿山/青田等）</td><td>传统美术</td><td><span class="tag tag-diy-low">⭐ 极低</span></td><td><span class="tag tag-ip-high">⭐⭐⭐⭐</span></td>
+        <td>专业工具+石料特殊性</td><td>石雕纹样 → 文创/家居装饰</td><td>中</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">🪵 木雕（东阳/潮州等）</td><td>传统美术</td><td><span class="tag tag-diy-low">⭐⭐ 极低</span></td><td><span class="tag tag-ip-high">⭐⭐⭐⭐</span></td>
+        <td>雕刻技艺+工具</td><td>木雕纹样 → 家居/文创/激光雕刻</td><td>中高</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">🥜 核雕</td><td>传统美术</td><td><span class="tag tag-diy-low">⭐ 极低</span></td><td><span class="tag tag-ip-high">⭐⭐⭐⭐</span></td>
+        <td>微雕技艺+显微镜级精度</td><td>核雕纹样 → 挂饰/文玩IP</td><td>低</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">🖌️ 内画（鼻烟壶）</td><td>传统美术</td><td><span class="tag tag-diy-low">⭐ 极低</span></td><td><span class="tag tag-ip-high">⭐⭐⭐</span></td>
+        <td>反向作画+特制弯头笔</td><td>内画图案 → 玻璃器皿印花</td><td>低</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">🎨 唐卡</td><td>传统美术</td><td><span class="tag tag-diy-low">⭐ 极低</span></td><td><span class="tag tag-ip-extreme">⭐⭐⭐⭐⭐</span></td>
+        <td>绘画功底+宗教仪轨</td><td>唐卡图案 → 装饰画/丝巾/书签</td><td>🔥 高</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">💍 银饰锻造（苗族等）</td><td>传统技艺</td><td><span class="tag tag-diy-low">⭐ 极低</span></td><td><span class="tag tag-ip-extreme">⭐⭐⭐⭐⭐</span></td>
+        <td>锻造设备+高温焊接</td><td>银饰纹样 → 合金饰品/文创</td><td>🔥 高</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">🏺 景泰蓝（传统烧制）</td><td>传统技艺</td><td><span class="tag tag-diy-low">⭐⭐ 低</span></td><td><span class="tag tag-ip-extreme">⭐⭐⭐⭐⭐</span></td>
+        <td>高温烧蓝工序复杂</td><td>景泰蓝纹样 → 彩砂DIY降级/文创</td><td>🔥 高</td></tr>
+      <tr>
+        <td style="font-weight:700;">🏺 青花瓷/汝窑</td><td>传统技艺</td><td><span class="tag tag-diy-low">⭐⭐ 低</span></td><td><span class="tag tag-ip-extreme">⭐⭐⭐⭐⭐</span></td>
+        <td>需窑炉高温烧制</td><td>青花纹样 → 餐具/丝巾/文创</td><td>🔥 高</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">🏗️ 古建筑彩画</td><td>传统技艺</td><td><span class="tag tag-diy-low">⭐ 极低</span></td><td><span class="tag tag-ip-high">⭐⭐⭐⭐</span></td>
+        <td>建筑现场+专业技艺</td><td>彩画纹样 → 填色书/文创/壁纸</td><td>中</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">🔮 琉璃烧制</td><td>传统技艺</td><td><span class="tag tag-diy-low">⭐ 极低</span></td><td><span class="tag tag-ip-high">⭐⭐⭐⭐</span></td>
+        <td>窑炉+高温工艺</td><td>琉璃色彩 → 玻璃制品/装饰品</td><td>中</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;">🪡 缂丝</td><td>传统技艺</td><td><span class="tag tag-diy-low">⭐ 极低</span></td><td><span class="tag tag-ip-extreme">⭐⭐⭐⭐⭐</span></td>
+        <td>通经断纬+极度耗时</td><td>缂丝纹样 → 高端丝巾/服饰印花</td><td>🔥 高</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ============ HOW TO CONVERT ============ -->
+  <h2 class="section-title">🔑 IP转化方法论：四种降维路径</h2>
+
+  <div class="idea-grid">
+    <div class="idea-card">
+      <div class="ic-header"><span style="font-size:1.5em;">🎨</span><span class="ic-name">纹样提取 → 平面印刷</span></div>
+      <div class="ic-why">门槛：最低 | 载体：最广</div>
+      <div class="ic-ideas">
+        将非遗纹样数字化，印到现代载体上。<br>
+        <span>宋锦纹样</span>→T恤/帆布包/手机壳<br>
+        <span>青花纹样</span>→餐具/丝巾/杯垫<br>
+        <span>唐卡图案</span>→装饰画/书签/明信片<br>
+        <span>漆器纹样</span>→笔记本封面/包装纸<br>
+        <span>苗族银饰纹样</span>→合金饰品/贴纸<br>
+        <span style="color:var(--gold);">★ 最快落地，适合所有"有独特纹样"的品类</span>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="ic-header"><span style="font-size:1.5em;">🧩</span><span class="ic-name">工艺降级 → 简化体验</span></div>
+      <div class="ic-why">门槛：中 | 保留手工感</div>
+      <div class="ic-ideas">
+        把高门槛工艺降级为可操作的简化版。<br>
+        <span>景泰蓝</span>→掐丝彩砂DIY（已归方向一）<br>
+        <span>青花瓷</span>→素坯彩绘+代烧服务<br>
+        <span>木雕</span>→激光雕刻木板拼装<br>
+        <span>织锦</span>→小型织布机+纹样卡片<br>
+        <span style="color:var(--gold);">★ 适合"工艺有趣但门槛高"的品类</span>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="ic-header"><span style="font-size:1.5em;">🎁</span><span class="ic-name">成品联名 → 高端礼品</span></div>
+      <div class="ic-why">门槛：高 | 客单价最高</div>
+      <div class="ic-ideas">
+        与非遗传承人/工坊合作，出联名成品。<br>
+        <span>云锦</span>×品牌丝巾联名<br>
+        <span>漆器</span>×茶具品牌联名<br>
+        <span>缂丝</span>×高端家居联名<br>
+        <span>唐卡</span>×艺术微喷限量版<br>
+        <span style="color:var(--gold);">★ 适合"稀缺性极高+文化溢价强"的品类</span>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="ic-header"><span style="font-size:1.5em;">📱</span><span class="ic-name">数字资产 → 元宇宙/NFT</span></div>
+      <div class="ic-why">门槛：中 | 年轻化</div>
+      <div class="ic-ideas">
+        非遗纹样/造型转化为数字资产。<br>
+        <span>宋锦纹样</span>→数字壁纸/表情包/滤镜<br>
+        <span>漆器色彩</span>→手机主题/UI皮肤<br>
+        <span>青花纹样</span>→数字藏品/NFT<br>
+        <span>木雕造型</span>→3D打印模型文件<br>
+        <span style="color:var(--gold);">★ 适合吸引Z世代、扩大品牌认知</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TOP PICKS ============ -->
+  <h2 class="section-title">🔥 方向二·扩展版：重点推荐6大品类</h2>
+  <p style="color:var(--text2);font-size:0.9em;margin-bottom:14px;">从16个品类中精选6个，兼顾IP价值、电商可行性和市场规模</p>
+
+  <div class="idea-grid">
+    <div class="idea-card" style="border-color:rgba(227,179,65,0.4);">
+      <div class="ic-header"><span style="font-size:1.5em;">🧣</span><span class="ic-name">织锦三杰（宋锦+云锦+蜀锦）</span></div>
+      <div class="ic-why">IP价值：⭐⭐⭐⭐⭐ | 电商潜力：🔥高</div>
+      <div class="ic-ideas">
+        <span>核心资产：</span>中国传统纹样宝库（八达晕、龙凤、团花、缠枝…）<br>
+        <span>商品方向：</span>丝巾/帆布包/T恤/手机壳/笔记本/家居布艺<br>
+        <span>差异化：</span>每个纹样配"纹样故事卡"，文化内容即溢价<br>
+        <span>客单价：</span>¥39-299
+      </div>
+    </div>
+
+    <div class="idea-card" style="border-color:rgba(227,179,65,0.4);">
+      <div class="ic-header"><span style="font-size:1.5em;">🏺</span><span class="ic-name">青花/汝窑纹样</span></div>
+      <div class="ic-why">IP价值：⭐⭐⭐⭐⭐ | 电商潜力：🔥高</div>
+      <div class="ic-ideas">
+        <span>核心资产：</span>青花蓝白美学、汝窑天青釉色、冰裂纹<br>
+        <span>商品方向：</span>餐具套装/丝巾/杯垫/桌旗/帆布包<br>
+        <span>差异化：</span>陶瓷纹样+现代餐具，东方美学餐桌<br>
+        <span>客单价：</span>¥29-399
+      </div>
+    </div>
+
+    <div class="idea-card" style="border-color:rgba(227,179,65,0.4);">
+      <div class="ic-header"><span style="font-size:1.5em;">💍</span><span class="ic-name">苗族银饰纹样</span></div>
+      <div class="ic-why">IP价值：⭐⭐⭐⭐⭐ | 电商潜力：🔥高</div>
+      <div class="ic-ideas">
+        <span>核心资产：</span>苗族银饰纹样（蝴蝶妈妈、龙凤、涡纹）<br>
+        <span>商品方向：</span>合金饰品/耳环/手链/书签/文具<br>
+        <span>差异化：</span>非遗纹样+现代饰品设计，民族风国潮<br>
+        <span>客单价：</span>¥29-169
+      </div>
+    </div>
+
+    <div class="idea-card" style="border-color:rgba(227,179,65,0.4);">
+      <div class="ic-header"><span style="font-size:1.5em;">🪑</span><span class="ic-name">漆器美学</span></div>
+      <div class="ic-why">IP价值：⭐⭐⭐⭐⭐ | 电商潜力：🔥高</div>
+      <div class="ic-ideas">
+        <span>核心资产：</span>漆器色彩体系（朱红/墨黑/金莳绘）、螺钿工艺<br>
+        <span>商品方向：</span>漆器风格餐具/茶具/文具/手机壳<br>
+        <span>差异化：</span>"漆器美学"色彩+现代材质，不必真用大漆<br>
+        <span>客单价：</span>¥39-299
+      </div>
+    </div>
+
+    <div class="idea-card" style="border-color:rgba(227,179,65,0.4);">
+      <div class="ic-header"><span style="font-size:1.5em;">🎨</span><span class="ic-name">唐卡艺术图案</span></div>
+      <div class="ic-why">IP价值：⭐⭐⭐⭐⭐ | 电商潜力：🔥高</div>
+      <div class="ic-ideas">
+        <span>核心资产：</span>唐卡色彩体系、佛教艺术图案、坛城几何美学<br>
+        <span>商品方向：</span>装饰画/丝巾/书签/明信片/笔记本<br>
+        <span>差异化：</span>藏文化美学+现代家居装饰<br>
+        <span>客单价：</span>¥29-399
+      </div>
+    </div>
+
+    <div class="idea-card" style="border-color:rgba(227,179,65,0.4);">
+      <div class="ic-header"><span style="font-size:1.5em;">🪡</span><span class="ic-name">缂丝纹样</span></div>
+      <div class="ic-why">IP价值：⭐⭐⭐⭐⭐ | 电商潜力：🔥高</div>
+      <div class="ic-ideas">
+        <span>核心资产：</span>"织中之圣"的极致工艺美学，通经断纬纹理<br>
+        <span>商品方向：</span>高端丝巾/服饰印花/家居装饰/艺术微喷<br>
+        <span>差异化：</span>"一寸缂丝一寸金"的故事溢价<br>
+        <span>客单价：</span>¥69-499
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STRATEGY ============ -->
+  <div class="strategy-box" style="border-color:var(--green);">
+    <h3>🎯 电商策略：方向一（DIY）+ 方向二（IP成品）组合打法</h3>
+    <table style="width:100%;font-size:0.88em;border-collapse:collapse;margin-top:10px;">
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:10px;font-weight:700;color:var(--green);">🧵 方向一 · DIY</td>
+        <td style="padding:10px;">扎染/绒花/中国结/香囊/陶艺</td>
+        <td style="padding:10px;color:var(--text2);">用户动手体验 → 高频复购 → 建立品牌信任</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:10px;font-weight:700;color:var(--blue);">📦 方向二 · IP成品</td>
+        <td style="padding:10px;">织锦纹样/青花/银饰/漆器美学/唐卡/缂丝</td>
+        <td style="padding:10px;color:var(--text2);">IP赋能溢价 → 高客单价 → 文化品牌调性</td>
+      </tr>
+      <tr>
+        <td style="padding:10px;font-weight:700;color:var(--gold);">🔗 交叉引流</td>
+        <td style="padding:10px;">DIY用户 → IP成品（进阶收藏）<br>IP成品用户 → DIY（体验入门）</td>
+        <td style="padding:10px;color:var(--text2);">同一品牌下双产品线互相导流</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="footer">
+    <p>🏮 非遗IP衍生品类扩展 · 宋锦方法论举一反三</p>
+    <p>项目: <a href="https://github.com/zxb20262026/ich-diy-research">github.com/zxb20262026/ich-diy-research</a></p>
+    <p style="margin-top:4px;font-size:0.78em;">
+      方法论：核心技术门槛高 + 视觉辨识度强 + 可数字化提取 → 方向二（IP成品赛道）
+    </p>
+  </div>
+
+</div>
+</body>
+</html>
