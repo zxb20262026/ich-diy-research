@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>非遗产品电商调研 | ICH E-Commerce Research</title>
+<style>
+  :root {
+    --bg: #0d1117; --card: #161b22; --border: #30363d;
+    --text: #c9d1d9; --text2: #8b949e;
+    --green: #3fb950; --orange: #d29922; --red: #f85149;
+    --blue: #58a6ff; --purple: #bc8cff; --cyan: #39d2c0;
+    --pink: #f778ba; --gold: #e3b341;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; line-height:1.6; }
+  .container { max-width:1200px; margin:0 auto; padding:20px; }
+
+  /* Header */
+  .header { background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460); border-bottom:3px solid var(--gold); padding:48px 20px; text-align:center; }
+  .header h1 { font-size:2.4em; background:linear-gradient(135deg,var(--gold),#f0c060,var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:10px; }
+  .header .subtitle { color:var(--text2); font-size:1.1em; }
+  .direction-badges { display:flex; gap:20px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
+  .dir-badge { padding:8px 20px; border-radius:24px; font-weight:700; font-size:1em; }
+  .dir-diy { background:rgba(63,185,80,0.15); color:var(--green); border:2px solid rgba(63,185,80,0.4); }
+  .dir-ip { background:rgba(88,166,255,0.15); color:var(--blue); border:2px solid rgba(88,166,255,0.4); }
+
+  /* Section */
+  .section-title { font-size:1.5em; margin:40px 0 20px; padding-bottom:8px; border-bottom:2px solid var(--border); display:flex; align-items:center; gap:10px; }
+  .subsection-title { font-size:1.2em; margin:28px 0 14px; color:var(--text); }
+
+  /* Summary cards */
+  .summary-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:24px 0; }
+  .summary-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px; text-align:center; }
+  .summary-card .num { font-size:2.8em; font-weight:800; margin:6px 0; }
+  .summary-card .label { color:var(--text2); font-size:0.9em; }
+  .summary-card.diy .num { color:var(--green); }
+  .summary-card.ip .num { color:var(--blue); }
+
+  /* Master table */
+  .master-table { width:100%; border-collapse:collapse; background:var(--card); border-radius:12px; overflow:hidden; border:1px solid var(--border); margin:20px 0; font-size:0.93em; }
+  .master-table th { background:#1c2533; color:var(--text); padding:12px 14px; text-align:left; font-size:0.85em; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; border-bottom:2px solid var(--border); }
+  .master-table td { padding:10px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  .master-table tr:hover { background:rgba(255,255,255,0.02); }
+  .master-table tr:last-child td { border-bottom:none; }
+
+  .status-tag { display:inline-block; padding:3px 12px; border-radius:12px; font-size:0.8em; font-weight:700; white-space:nowrap; }
+  .status-diy { background:rgba(63,185,80,0.2); color:var(--green); border:1px solid rgba(63,185,80,0.3); }
+  .status-partial { background:rgba(210,153,34,0.2); color:var(--orange); border:1px solid rgba(210,153,34,0.3); }
+  .status-ip { background:rgba(88,166,255,0.2); color:var(--blue); border:1px solid rgba(88,166,255,0.3); }
+  .status-no { background:rgba(248,81,73,0.2); color:var(--red); border:1px solid rgba(248,81,73,0.3); }
+
+  .sub-items { font-size:0.88em; color:var(--text2); line-height:1.6; }
+  .sub-items span { color:var(--cyan); }
+
+  /* Heat ranking bar */
+  .heat-bar-row { display:flex; flex-direction:column; gap:8px; margin:16px 0; }
+  .heat-bar-item { display:flex; align-items:center; gap:12px; padding:8px 0; }
+  .heat-rank { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.9em; flex-shrink:0; }
+  .heat-rank.r1 { background:linear-gradient(135deg,#e3b341,#f0c060); color:#0d1117; }
+  .heat-rank.r2 { background:linear-gradient(135deg,#c0c0c0,#d0d0d0); color:#0d1117; }
+  .heat-rank.r3 { background:linear-gradient(135deg,#cd7f32,#d4883d); color:#fff; }
+  .heat-rank.rn { background:rgba(139,148,158,0.2); color:var(--text2); }
+  .heat-bar-info { flex:1; min-width:0; }
+  .heat-bar-name { font-weight:700; font-size:1em; }
+  .heat-bar-desc { font-size:0.82em; color:var(--text2); margin-top:2px; }
+  .heat-bar-meter { width:120px; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; flex-shrink:0; overflow:hidden; }
+  .heat-bar-fill { height:100%; border-radius:3px; }
+  .heat-bar-fill.h100 { width:100%; background:linear-gradient(90deg,var(--green),var(--gold)); }
+  .heat-bar-fill.h95 { width:95%; background:linear-gradient(90deg,var(--green),var(--gold)); }
+  .heat-bar-fill.h90 { width:90%; background:linear-gradient(90deg,var(--green),var(--cyan)); }
+  .heat-bar-fill.h85 { width:85%; background:linear-gradient(90deg,var(--cyan),var(--blue)); }
+  .heat-bar-fill.h80 { width:80%; background:linear-gradient(90deg,var(--cyan),var(--blue)); }
+  .heat-bar-fill.h72 { width:72%; background:linear-gradient(90deg,var(--blue),var(--purple)); }
+  .heat-bar-fill.h65 { width:65%; background:linear-gradient(90deg,var(--blue),var(--purple)); }
+  .heat-bar-fill.h58 { width:58%; background:linear-gradient(90deg,var(--purple),var(--pink)); }
+  .heat-score { font-weight:700; font-size:0.9em; flex-shrink:0; width:36px; text-align:right; }
+
+  /* Detail cards */
+  .detail-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(350px,1fr)); gap:14px; margin:16px 0; }
+  .detail-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px; transition:transform 0.2s,border-color 0.2s; }
+  .detail-card:hover { transform:translateY(-2px); border-color:var(--gold); }
+  .detail-card .dc-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .detail-card .dc-name { font-weight:700; font-size:1.05em; }
+  .stars { color:var(--gold); font-size:0.85em; letter-spacing:2px; }
+  .detail-card .dc-desc { font-size:0.88em; color:var(--text2); margin-bottom:8px; }
+  .kpi-row { display:flex; gap:10px; flex-wrap:wrap; margin:8px 0; }
+  .kpi { display:flex; align-items:center; gap:5px; font-size:0.8em; color:var(--text2); }
+  .kpi .dot { width:7px; height:7px; border-radius:50%; }
+  .dot.low { background:var(--green); } .dot.mid { background:var(--orange); } .dot.high { background:var(--red); }
+  .dc-tags { display:flex; gap:5px; flex-wrap:wrap; margin-top:8px; }
+  .dc-tag { padding:2px 9px; border-radius:10px; font-size:0.73em; background:rgba(88,166,255,0.12); color:var(--blue); border:1px solid rgba(88,166,255,0.2); }
+  .dc-tag.warm { background:rgba(227,179,65,0.12); color:var(--gold); border:1px solid rgba(227,179,65,0.2); }
+  .dc-tag.hot { background:rgba(248,81,73,0.12); color:var(--red); border:1px solid rgba(248,81,73,0.2); }
+
+  /* Direction 2 cards */
+  .ip-category { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px; margin:14px 0; }
+  .ip-category .ip-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .ip-category .ip-icon { font-size:1.6em; }
+  .ip-category .ip-name { font-weight:700; font-size:1.1em; }
+  .ip-category .ip-class { color:var(--text2); font-size:0.85em; margin-left:auto; }
+  .ip-products { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; }
+  .ip-product { padding:12px; border-radius:8px; border:1px solid var(--border); background:rgba(255,255,255,0.02); }
+  .ip-product .ip-pname { font-weight:600; font-size:0.92em; }
+  .ip-product .ip-pdesc { font-size:0.8em; color:var(--text2); margin-top:4px; }
+  .ip-product .ip-ptags { margin-top:6px; display:flex; gap:4px; }
+  .ip-ptag { padding:1px 7px; border-radius:8px; font-size:0.7em; background:rgba(188,140,255,0.1); color:var(--purple); border:1px solid rgba(188,140,255,0.2); }
+  .ip-ptag.green { background:rgba(63,185,80,0.1); color:var(--green); border:1px solid rgba(63,185,80,0.2); }
+
+  /* Strategy box */
+  .strategy-box { background:linear-gradient(135deg,rgba(63,185,80,0.06),rgba(88,166,255,0.06)); border:2px solid var(--border); border-radius:12px; padding:28px; margin:30px 0; }
+  .strategy-box h3 { font-size:1.2em; margin-bottom:14px; color:var(--gold); }
+  .strategy-box ul { padding-left:20px; }
+  .strategy-box li { margin:8px 0; font-size:0.93em; }
+
+  .footer { text-align:center; padding:30px; color:var(--text2); font-size:0.82em; border-top:1px solid var(--border); margin-top:40px; }
+  .divider { border:none; border-top:2px dashed var(--border); margin:40px 0; }
+
+  @media (max-width:768px) {
+    .summary-row { grid-template-columns:repeat(2,1fr); }
+    .detail-grid { grid-template-columns:1fr; }
+    .ip-products { grid-template-columns:1fr 1fr; }
+    .header h1 { font-size:1.5em; }
+    .heat-bar-meter { width:60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏮 非遗产品电商化调研报告</h1>
+  <p class="subtitle">中国非物质文化遗产 · 双赛道产品矩阵分析</p>
+  <div class="direction-badges">
+    <span class="dir-badge dir-diy">🧵 方向一：DIY材料包赛道</span>
+    <span class="dir-badge dir-ip">📦 方向二：非遗IP成品赛道</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ============ STRATEGY OVERVIEW ============ -->
+  <div class="summary-row">
+    <div class="summary-card diy">
+      <div class="label">🧵 DIY赛道</div>
+      <div class="num">2</div>
+      <div class="label">核心大类<br>30+子品类</div>
+    </div>
+    <div class="summary-card ip">
+      <div class="label">📦 IP成品赛道</div>
+      <div class="num">6</div>
+      <div class="label">衍生大类<br>40+商品线</div>
+    </div>
+    <div class="summary-card" style="border-color:rgba(210,153,34,0.3);">
+      <div class="label" style="color:var(--orange);">⚠️ 部分适合</div>
+      <div class="num" style="color:var(--orange);">2</div>
+      <div class="label">传统医药 · 体育游艺<br>少量补充</div>
+    </div>
+    <div class="summary-card" style="border-color:rgba(248,81,73,0.3);">
+      <div class="label" style="color:var(--red);">🎯 双赛道覆盖</div>
+      <div class="num" style="color:var(--gold);">10</div>
+      <div class="label">非遗十大类<br>100%覆盖</div>
+    </div>
+  </div>
+
+  <!-- ============ 双赛道产品矩阵总图 ============ -->
+  <div class="strategy-box">
+    <h3>🗺️ 非遗电商双赛道产品矩阵</h3>
+    <p style="color:var(--text2);font-size:0.9em;margin-bottom:12px;">非遗十大类中，2大类走DIY材料包，6大类走IP成品，2大类走补充线——形成完整覆盖</p>
+    <table class="master-table" style="margin:12px 0;">
+      <thead>
+        <tr><th>非遗大类</th><th>赛道归属</th><th>产品模式</th><th>典型SKU</th></tr>
+      </thead>
+      <tbody>
+        <tr style="background:rgba(63,185,80,0.03);"><td>🎯 传统美术</td><td><span class="status-tag status-diy">方向一 · DIY</span></td><td>材料包 + 教程</td><td>刺绣套件/剪纸套装/绒花材料包/中国结套件</td></tr>
+        <tr style="background:rgba(63,185,80,0.03);"><td>🎯 传统技艺</td><td><span class="status-tag status-diy">方向一 · DIY</span></td><td>材料包 + 体验</td><td>扎染套装/陶艺泥料/香囊材料/活字印刷套件</td></tr>
+        <tr><td>📖 民间文学</td><td><span class="status-tag status-ip">方向二 · IP成品</span></td><td>文创衍生品</td><td>传说绘本/主题手办/IP联名文具/故事卡牌</td></tr>
+        <tr><td>🎵 传统音乐</td><td><span class="status-tag status-ip">方向二 · IP成品</span></td><td>乐器文创 + 简易乐器</td><td>古琴香插/迷你乐器摆件/陶笛套装/八音盒</td></tr>
+        <tr><td>💃 传统舞蹈</td><td><span class="status-tag status-ip">方向二 · IP成品</span></td><td>道具文创 + 服饰元素</td><td>迷你舞龙/秧歌扇/水袖丝巾/舞蹈摆件</td></tr>
+        <tr><td>🎭 传统戏剧</td><td><span class="status-tag status-ip">方向二 · IP成品</span></td><td>成品工艺品</td><td>脸谱面具/戏曲人偶/戏服元素配饰/皮影套装</td></tr>
+        <tr><td>🎤 曲艺</td><td><span class="status-tag status-ip">方向二 · IP成品</span></td><td>小品类文创</td><td>快板成品/相声折扇/评书故事卡/醒木文创</td></tr>
+        <tr><td>🎆 民俗</td><td><span class="status-tag status-ip">方向二 · IP成品</span></td><td>节庆成品 + 民俗工艺品</td><td>成品花灯/对联红包/月饼模具/庙会手工艺品</td></tr>
+        <tr style="background:rgba(210,153,34,0.03);"><td>⚽ 体育游艺</td><td><span class="status-tag status-partial">补充线</span></td><td>益智玩具/游戏套件</td><td>鲁班锁/七巧板/九连环/投壶套装</td></tr>
+        <tr style="background:rgba(210,153,34,0.03);"><td>🌿 传统医药</td><td><span class="status-tag status-partial">补充线</span></td><td>养生DIY + 成品</td><td>香囊/药枕/艾条/药皂（注意合规）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========================================== -->
+  <!--  DIRECTION 1: DIY 赛道 -->
+  <!-- ========================================== -->
+  <h2 class="section-title"><span class="icon">🧵</span> 方向一：DIY材料包赛道 — 市场热度排序</h2>
+
+  <div class="strategy-box" style="border-color:rgba(63,185,80,0.3);">
+    <h3>📐 排序方法论（5维度加权）</h3>
+    <table style="width:100%;margin:10px 0;font-size:0.9em;border-collapse:collapse;">
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">🔍 电商搜索量</td><td style="padding:8px;text-align:right;font-weight:700;">30%</td>
+        <td style="padding:8px;color:var(--text2);">淘宝/天猫月搜索量级（直接购买意图）</td></tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">📕 小红书传播力</td><td style="padding:8px;text-align:right;font-weight:700;">25%</td>
+        <td style="padding:8px;color:var(--text2);">话题笔记量 + 近一年增速（种草→转化）</td></tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">🎵 抖音内容热度</td><td style="padding:8px;text-align:right;font-weight:700;">20%</td>
+        <td style="padding:8px;color:var(--text2);">话题播放量 + 爆款内容密度</td></tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:8px;">📅 非节日依赖度</td><td style="padding:8px;text-align:right;font-weight:700;">15%</td>
+        <td style="padding:8px;color:var(--text2);">日常可持续卖 vs 仅节日脉冲（越高越好）</td></tr>
+      <tr>
+        <td style="padding:8px;">📈 近12月增长趋势</td><td style="padding:8px;text-align:right;font-weight:700;">10%</td>
+        <td style="padding:8px;color:var(--text2);">品类增速，判断是否在风口</td></tr>
+    </table>
+  </div>
+
+  <h3 class="subsection-title">🏆 第一梯队8品类 · 热度降序排名</h3>
+
+  <div class="heat-bar-row">
+    <div class="heat-bar-item">
+      <div class="heat-rank r1">1</div>
+      <div class="heat-bar-info"><div class="heat-bar-name">🥇 刺绣DIY</div><div class="heat-bar-desc">淘宝月搜量级最大（+十字绣合并），小红书200万+笔记，四季稳定</div></div>
+      <div class="heat-bar-meter"><div class="heat-bar-fill h100"></div></div>
+      <div class="heat-score" style="color:var(--gold);">100</div>
+    </div>
+    <div class="heat-bar-item">
+      <div class="heat-rank r2">2</div>
+      <div class="heat-bar-info"><div class="heat-bar-name">🥈 扎染DIY</div><div class="heat-bar-desc">小红书现象级，抖音数十亿播放，近两年增速50%+，四季可卖</div></div>
+      <div class="heat-bar-meter"><div class="heat-bar-fill h95"></div></div>
+      <div class="heat-score" style="color:#d0d0d0;">95</div>
+    </div>
+    <div class="heat-bar-item">
+      <div class="heat-rank r3">3</div>
+      <div class="heat-bar-info"><div class="heat-bar-name">🥉 绒花/缠花</div><div class="heat-bar-desc">近一年增速>100%，汉服经济最强关联，小红书从0到爆发</div></div>
+      <div class="heat-bar-meter"><div class="heat-bar-fill h90"></div></div>
+      <div class="heat-score" style="color:#cd7f32;">90</div>
+    </div>
+    <div class="heat-bar-item">
+      <div class="heat-rank rn">4</div>
+      <div class="heat-bar-info"><div class="heat-bar-name">🌿 香囊DIY</div><div class="heat-bar-desc">端午脉冲单月爆发力最强，中药国潮概念加持，日常养生延伸</div></div>
+      <div class="heat-bar-meter"><div class="heat-bar-fill h85"></div></div>
+      <div class="heat-score" style="color:var(--text2);">85</div>
+    </div>
+    <div class="heat-bar-item">
+      <div class="heat-rank rn">5</div>
+      <div class="heat-bar-info"><div class="heat-bar-name">🏺 陶艺/泥塑DIY</div><div class="heat-bar-desc">线下体验反哺线上，亲子+情侣双客群，材料消耗快复购稳</div></div>
+      <div class="heat-bar-meter"><div class="heat-bar-fill h80"></div></div>
+      <div class="heat-score" style="color:var(--text2);">80</div>
+    </div>
+    <div class="heat-bar-item">
+      <div class="heat-rank rn">6</div>
+      <div class="heat-bar-info"><div class="heat-bar-name">🪢 中国结/绳编</div><div class="heat-bar-desc">复购率全品类最高，春节脉冲+日常稳定，但视觉传播力中等</div></div>
+      <div class="heat-bar-meter"><div class="heat-bar-fill h72"></div></div>
+      <div class="heat-score" style="color:var(--text2);">72</div>
+    </div>
+    <div class="heat-bar-item">
+      <div class="heat-rank rn">7</div>
+      <div class="heat-bar-info"><div class="heat-bar-name">📜 花草纸/活字印刷</div><div class="heat-bar-desc">四大发明IP有辨识度，亲子教育稳定，成人客群偏窄</div></div>
+      <div class="heat-bar-meter"><div class="heat-bar-fill h65"></div></div>
+      <div class="heat-score" style="color:var(--text2);">65</div>
+    </div>
+    <div class="heat-bar-item">
+      <div class="heat-rank rn">8</div>
+      <div class="heat-bar-info"><div class="heat-bar-name">✂️ 剪纸DIY</div><div class="heat-bar-desc">春节爆发力强但全年依赖节日，日常搜索偏低，差异化空间有限</div></div>
+      <div class="heat-bar-meter"><div class="heat-bar-fill h58"></div></div>
+      <div class="heat-score" style="color:var(--text2);">58</div>
+    </div>
+  </div>
+
+  <!-- Direction 1 detail cards -->
+  <div class="detail-grid">
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">🥇 刺绣DIY</span><span class="stars">★★★★★</span></div>
+      <div class="dc-desc">成熟品类，材料包（绣布+绣线+绣绷+图纸+针）电商化程度最高。苏绣/湘绣/蜀绣/粤绣/苗绣各有IP价值。小红书200万+笔记。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot low"></span>材料成本：低</span><span class="kpi"><span class="dot mid"></span>上手：中</span><span class="kpi"><span class="dot low"></span>复购：高</span><span class="kpi"><span class="dot mid"></span>客单价 ¥39-199</span></div>
+      <div class="dc-tags"><span class="dc-tag hot">成熟品类</span><span class="dc-tag warm">IP价值高</span><span class="dc-tag">送礼属性</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">🥈 扎染DIY</span><span class="stars">★★★★★</span></div>
+      <div class="dc-desc">捆扎→浸染→拆线→惊喜。小红书现象级内容，抖音数十亿播放。T恤/方巾/帆布包载体丰富，过程有趣、每件独一无二。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot low"></span>材料成本：低</span><span class="kpi"><span class="dot low"></span>上手：低</span><span class="kpi"><span class="dot low"></span>复购：高</span><span class="kpi"><span class="dot mid"></span>客单价 ¥39-99</span></div>
+      <div class="dc-tags"><span class="dc-tag hot">小红书爆款</span><span class="dc-tag warm">体验感强</span><span class="dc-tag">成品实用</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">🥉 绒花/缠花</span><span class="stars">★★★★★</span></div>
+      <div class="dc-desc">近一年增速>100%，汉服经济最强关联品类。蚕丝绒花、丝线缠花，发簪/胸针/耳饰。颜值高+送礼属性+出片率极高。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot low"></span>材料成本：低</span><span class="kpi"><span class="dot mid"></span>上手：中</span><span class="kpi"><span class="dot low"></span>复购：高</span><span class="kpi"><span class="dot mid"></span>客单价 ¥39-129</span></div>
+      <div class="dc-tags"><span class="dc-tag hot">小红书增速最快</span><span class="dc-tag warm">送礼属性</span><span class="dc-tag">颜值经济</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">🌿 香囊DIY</span><span class="stars">★★★★</span></div>
+      <div class="dc-desc">端午爆品！布料+中药材+丝线。驱蚊/安神配方+手工缝制=文化+实用。材料成本极低，节日脉冲式爆发，日常可延展养生香囊线。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot low"></span>材料成本：极低</span><span class="kpi"><span class="dot low"></span>上手：低</span><span class="kpi"><span class="dot low"></span>复购：高</span><span class="kpi"><span class="dot low"></span>客单价 ¥19-59</span></div>
+      <div class="dc-tags"><span class="dc-tag hot">端午爆款</span><span class="dc-tag warm">实用价值</span><span class="dc-tag">中药概念</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">🏺 陶艺/泥塑DIY</span><span class="stars">★★★★</span></div>
+      <div class="dc-desc">拉坯/手捏/彩绘。线下体验成熟反哺线上。陶土+工具+教程材料包，亲子+情侣双客群。泥塑（泥人张/惠山泥人）可做彩绘套件。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot mid"></span>材料成本：中</span><span class="kpi"><span class="dot mid"></span>上手：中</span><span class="kpi"><span class="dot low"></span>复购：高</span><span class="kpi"><span class="dot mid"></span>客单价 ¥49-199</span></div>
+      <div class="dc-tags"><span class="dc-tag hot">成熟市场</span><span class="dc-tag warm">亲子情侣</span><span class="dc-tag">成品实用</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">🪢 中国结/绳编</span><span class="stars">★★★★</span></div>
+      <div class="dc-desc">盘长结/如意结/手链编织。材料极简（线绳），春节/婚庆/日常三场景，复购率全品类最高。但内容视觉冲击弱于扎染/绒花。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot low"></span>材料成本：极低</span><span class="kpi"><span class="dot low"></span>上手：低</span><span class="kpi"><span class="dot low"></span>复购：极高</span><span class="kpi"><span class="dot low"></span>客单价 ¥19-69</span></div>
+      <div class="dc-tags"><span class="dc-tag hot">爆款基因</span><span class="dc-tag warm">节庆刚需</span><span class="dc-tag">材料极简</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">📜 花草纸/活字印刷</span><span class="stars">★★★★</span></div>
+      <div class="dc-desc">纸浆抄纸→加花草→晾干。活字排版→刷墨→印刷。四大发明IP加持，亲子教育刚需。二者可组合套装，但成人单品客群偏窄。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot low"></span>材料成本：低</span><span class="kpi"><span class="dot low"></span>上手：低</span><span class="kpi"><span class="dot mid"></span>复购：中</span><span class="kpi"><span class="dot mid"></span>客单价 ¥39-169</span></div>
+      <div class="dc-tags"><span class="dc-tag warm">四大发明IP</span><span class="dc-tag">教育刚需</span><span class="dc-tag">亲子稳定</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">✂️ 剪纸DIY</span><span class="stars">★★★</span></div>
+      <div class="dc-desc">中国最普及的非遗DIY。红纸+剪刀/刻刀，成本极低。春节窗花+生肖+福字图案丰富。但全年高度依赖节日，日常搜索量偏低。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot low"></span>材料成本：极低</span><span class="kpi"><span class="dot low"></span>上手：低</span><span class="kpi"><span class="dot mid"></span>复购：中</span><span class="kpi"><span class="dot low"></span>客单价 ¥19-69</span></div>
+      <div class="dc-tags"><span class="dc-tag warm">节日脉冲</span><span class="dc-tag">成本最低</span></div>
+    </div>
+  </div>
+
+  <!-- Plus more DIY sub-items -->
+  <h3 class="subsection-title">🧵 方向一扩展子品类（15+，按需拓展）</h3>
+  <div class="detail-grid">
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">🎨 蜡染DIY</span><span class="stars">★★★★</span></div>
+      <div class="dc-desc">蜡刀蘸蜡画图案→浸染→脱蜡。比扎染多绘画环节，苗族文化IP强。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot mid"></span>成本中</span><span class="kpi"><span class="dot mid"></span>难度中</span><span class="kpi"><span class="dot mid"></span>¥59-139</span></div>
+      <div class="dc-tags"><span class="dc-tag">艺术性强</span><span class="dc-tag warm">文化深度</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">🌸 团扇DIY</span><span class="stars">★★★★</span></div>
+      <div class="dc-desc">素面团扇+绘画/刺绣/干花装饰。汉服经济绝佳搭配，夏季爆品，出片率高。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot low"></span>成本低</span><span class="kpi"><span class="dot low"></span>难度低</span><span class="kpi"><span class="dot mid"></span>¥29-89</span></div>
+      <div class="dc-tags"><span class="dc-tag hot">汉服联动</span><span class="dc-tag warm">夏季爆品</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">🖼️ 年画DIY</span><span class="stars">★★★</span></div>
+      <div class="dc-desc">木版印刷体验/年画填色。杨柳青/桃花坞IP。春节场景极强但季节性强。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot mid"></span>成本中</span><span class="kpi"><span class="dot low"></span>难度低</span><span class="kpi"><span class="dot mid"></span>¥49-129</span></div>
+      <div class="dc-tags"><span class="dc-tag warm">春节IP</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">🪁 风筝DIY</span><span class="stars">★★★★</span></div>
+      <div class="dc-desc">扎骨架+裱糊+绘画。潍坊风筝IP，清明/春季爆品，户外+手工双重体验。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot low"></span>成本低</span><span class="kpi"><span class="dot mid"></span>难度中</span><span class="kpi"><span class="dot mid"></span>¥29-79</span></div>
+      <div class="dc-tags"><span class="dc-tag warm">春季爆品</span><span class="dc-tag">户外场景</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">💎 掐丝珐琅DIY</span><span class="stars">★★★</span></div>
+      <div class="dc-desc">铜丝掐图案→填彩砂→封胶（简化版无需烧制）。成品华丽精致，送礼佳品但门槛中高。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot mid"></span>成本中</span><span class="kpi"><span class="dot mid"></span>难度中高</span><span class="kpi"><span class="dot mid"></span>¥69-199</span></div>
+      <div class="dc-tags"><span class="dc-tag">成品华丽</span><span class="dc-tag warm">送礼</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">🔨 榫卯/鲁班锁DIY</span><span class="stars">★★★★</span></div>
+      <div class="dc-desc">榫卯拼装+鲁班锁+孔明锁。STEM教育概念，成年男性客群独特，无钉无胶纯力学。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot mid"></span>成本中</span><span class="kpi"><span class="dot mid"></span>难度中</span><span class="kpi"><span class="dot mid"></span>¥49-199</span></div>
+      <div class="dc-tags"><span class="dc-tag">STEM教育</span><span class="dc-tag warm">男性客群</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">🏮 花灯DIY</span><span class="stars">★★★★</span></div>
+      <div class="dc-desc">竹骨+糊纸+装饰。元宵/中秋爆品，兔子灯/走马灯分级。节日场景极强。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot mid"></span>成本中</span><span class="kpi"><span class="dot mid"></span>难度中</span><span class="kpi"><span class="dot mid"></span>¥39-149</span></div>
+      <div class="dc-tags"><span class="dc-tag warm">元宵/中秋</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-header"><span class="dc-name">🎭 皮影DIY</span><span class="stars">★★★</span></div>
+      <div class="dc-desc">皮影雕刻+上色+装杆。可PVC替代牛皮降成本。配合小舞台更有体验感。</div>
+      <div class="kpi-row"><span class="kpi"><span class="dot mid"></span>成本中</span><span class="kpi"><span class="dot mid"></span>难度中高</span><span class="kpi"><span class="dot mid"></span>¥59-159</span></div>
+      <div class="dc-tags"><span class="dc-tag">体验独特</span><span class="dc-tag">教育场景</span></div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!--  DIVIDER -->
+  <!-- ========================================== -->
+  <hr class="divider">
+
+  <!-- ========================================== -->
+  <!--  DIRECTION 2: IP PRODUCT 赛道 -->
+  <!-- ========================================== -->
+  <h2 class="section-title"><span class="icon">📦</span> 方向二：非遗IP成品赛道 — 六大排除类的具象化商品</h2>
+
+  <div class="strategy-box" style="border-color:rgba(88,166,255,0.3);">
+    <h3>💡 核心逻辑</h3>
+    <p style="color:var(--text2);font-size:0.9em;">
+      民间文学/传统音乐/舞蹈/戏剧/曲艺/民俗 —— 这六类是<span style="color:var(--red);">表演型/口述型/仪式型</span>非遗，不适合做DIY材料包。<br>
+      但它们有强大的<span style="color:var(--blue);">文化IP价值</span>，可以衍生出具象化商品：<b>成品文创 · 装饰摆件 · 节庆用品 · IP联名 · 体验工具</b>
+    </p>
+  </div>
+
+  <!-- IP Category 1: 民俗 (biggest) -->
+  <div class="ip-category" style="border-color:rgba(88,166,255,0.3);">
+    <div class="ip-header">
+      <span class="ip-icon">🎆</span><span class="ip-name">民俗 → 节庆成品 + 民俗工艺品</span>
+      <span class="ip-class" style="background:rgba(88,166,255,0.1);color:var(--blue);padding:2px 10px;border-radius:10px;">商品线最丰富</span>
+    </div>
+    <div class="ip-products">
+      <div class="ip-product"><div class="ip-pname">🏮 成品花灯/走马灯</div><div class="ip-desc">元宵/中秋刚需，竹骨+绢布成品灯，¥39-199</div><div class="ip-ptags"><span class="ip-ptag green">节日刚需</span><span class="ip-ptag">装饰属性</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🧧 春节对联/福字/红包</div><div class="ip-desc">书法名家联名/IP化设计，¥9-69，脉冲爆发</div><div class="ip-ptags"><span class="ip-ptag green">春节巨量</span><span class="ip-ptag">设计驱动</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🥮 月饼模具/端午礼盒</div><div class="ip-desc">传统花纹模具+礼盒设计，¥29-129</div><div class="ip-ptags"><span class="ip-ptag green">节庆礼盒</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🐉 十二生肖摆件/挂饰</div><div class="ip-desc">每年一换，持续复购，材料可陶瓷/木/金属</div><div class="ip-ptags"><span class="ip-ptag green">年更复购</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🎪 庙会手工艺品</div><div class="ip-desc">拨浪鼓/风车/糖人模具/面人成品，怀旧+国潮</div><div class="ip-ptags"><span class="ip-ptag">国潮概念</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🌾 二十四节气文创</div><div class="ip-desc">节气日历/明信片/香薰/茶器，文化深度高</div><div class="ip-ptags"><span class="ip-ptag">文化深度</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🎀 端午五彩绳/艾草挂件</div><div class="ip-desc">成品手绳+艾草挂饰，¥9-39，小件引流</div><div class="ip-ptags"><span class="ip-ptag green">端午刚需</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🏮 灯笼/烛台/香炉</div><div class="ip-desc">宫灯造型桌面灯/香薰炉，家居装饰线</div><div class="ip-ptags"><span class="ip-ptag">家居装饰</span></div></div>
+    </div>
+  </div>
+
+  <!-- IP Category 2: 传统戏剧 -->
+  <div class="ip-category">
+    <div class="ip-header">
+      <span class="ip-icon">🎭</span><span class="ip-name">传统戏剧 → 戏曲文创 + 工艺品</span>
+      <span class="ip-class" style="background:rgba(188,140,255,0.1);color:var(--purple);padding:2px 10px;border-radius:10px;">视觉识别度极高</span>
+    </div>
+    <div class="ip-products">
+      <div class="ip-product"><div class="ip-pname">🎭 脸谱面具（成品）</div><div class="ip-desc">京剧/川剧脸谱挂饰/面具，¥29-89，装饰+收藏</div><div class="ip-ptags"><span class="ip-ptag green">视觉识别强</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🧸 戏曲人偶/娃娃</div><div class="ip-desc">京剧/昆曲角色人偶，穆桂英/诸葛亮等，¥39-159</div><div class="ip-ptags"><span class="ip-ptag green">收藏属性</span></div></div>
+      <div class="ip-product"><div class="ip-pname">👘 戏服元素配饰</div><div class="ip-desc">水袖丝巾/京剧凤冠发饰/云肩披肩，汉服联动</div><div class="ip-ptags"><span class="ip-ptag green">汉服联动</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🖼️ 皮影戏观赏套装</div><div class="ip-desc">成品皮影+迷你舞台，¥59-199，亲子+收藏</div><div class="ip-ptags"><span class="ip-ptag">亲子教育</span></div></div>
+      <div class="ip-product"><div class="ip-pname">📱 戏曲主题文创</div><div class="ip-desc">书签/手机壳/帆布包/杯垫，戏曲元素联名</div><div class="ip-ptags"><span class="ip-ptag">低客单引流</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🖌️ 脸谱填色套装</div><div class="ip-desc">线稿+颜料，半DIY半成品，降低门槛</div><div class="ip-ptags"><span class="ip-ptag green">低门槛体验</span></div></div>
+    </div>
+  </div>
+
+  <!-- IP Category 3: 民间文学 -->
+  <div class="ip-category">
+    <div class="ip-header">
+      <span class="ip-icon">📖</span><span class="ip-name">民间文学 → 故事IP衍生品</span>
+      <span class="ip-class" style="background:rgba(227,179,65,0.1);color:var(--gold);padding:2px 10px;border-radius:10px;">IP授权潜力最大</span>
+    </div>
+    <div class="ip-products">
+      <div class="ip-product"><div class="ip-pname">📚 传说绘本/图画书</div><div class="ip-desc">梁祝/白蛇传/牛郎织女，国风插画+故事，¥29-89</div><div class="ip-ptags"><span class="ip-ptag green">亲子教育</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🧩 故事主题桌游/拼图</div><div class="ip-desc">西游/封神/山海经主题，¥49-169，益智+文化</div><div class="ip-ptags"><span class="ip-ptag green">桌游赛道</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🎴 故事角色卡牌/手办</div><div class="ip-desc">盲盒/收藏卡，¥19-99，Z世代收藏市场</div><div class="ip-ptags"><span class="ip-ptag green">收藏经济</span></div></div>
+      <div class="ip-product"><div class="ip-pname">✏️ IP联名文具套装</div><div class="ip-desc">笔记本/书签/钢笔，梁祝/白蛇传IP联名</div><div class="ip-ptags"><span class="ip-ptag">IP联名</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🖼️ 故事主题装饰画</div><div class="ip-desc">国风插画装饰画/卷轴，¥39-199，家居装饰</div><div class="ip-ptags"><span class="ip-ptag">家居装饰</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🔖 非遗故事主题书签</div><div class="ip-desc">金属/木质书签，单款¥9-29，低客单引流</div><div class="ip-ptags"><span class="ip-ptag green">引流品</span></div></div>
+    </div>
+  </div>
+
+  <!-- IP Category 4: 传统音乐 -->
+  <div class="ip-category">
+    <div class="ip-header">
+      <span class="ip-icon">🎵</span><span class="ip-name">传统音乐 → 乐器文创 + 简易乐器</span>
+      <span class="ip-class" style="background:rgba(57,210,192,0.1);color:var(--cyan);padding:2px 10px;border-radius:10px;">雅致文化调性</span>
+    </div>
+    <div class="ip-products">
+      <div class="ip-product"><div class="ip-pname">🎸 迷你乐器摆件/模型</div><div class="ip-desc">古琴/琵琶/二胡等微缩模型/摆件，¥39-199</div><div class="ip-ptags"><span class="ip-ptag">雅致装饰</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🕯️ 古琴造型香插/茶具</div><div class="ip-desc">乐器造型文创，香插/茶宠/文房用品，¥49-199</div><div class="ip-ptags"><span class="ip-ptag green">高客单</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🎶 陶笛/竹笛简易套装</div><div class="ip-desc">入门级传统乐器+曲谱，¥29-99，体验+实用</div><div class="ip-ptags"><span class="ip-ptag green">可玩可学</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🎵 传统音乐八音盒</div><div class="ip-desc">古琴/琵琶造型八音盒，《高山流水》等曲目</div><div class="ip-ptags"><span class="ip-ptag green">送礼属性</span></div></div>
+      <div class="ip-product"><div class="ip-pname">💍 乐器造型饰品</div><div class="ip-desc">琵琶耳环/古琴项链/二胡胸针，¥19-69</div><div class="ip-ptags"><span class="ip-ptag">女性客群</span></div></div>
+      <div class="ip-product"><div class="ip-pname">📻 有声文创/音乐盒</div><div class="ip-desc">内置传统音乐的蓝牙音箱/文创音频</div><div class="ip-ptags"><span class="ip-ptag">科技+非遗</span></div></div>
+    </div>
+  </div>
+
+  <!-- IP Category 5: 传统舞蹈 -->
+  <div class="ip-category">
+    <div class="ip-header">
+      <span class="ip-icon">💃</span><span class="ip-name">传统舞蹈 → 道具文创 + 服饰元素</span>
+      <span class="ip-class" style="background:rgba(248,119,186,0.1);color:var(--pink);padding:2px 10px;border-radius:10px;">春节场景强</span>
+    </div>
+    <div class="ip-products">
+      <div class="ip-product"><div class="ip-pname">🐉 迷你舞龙/舞狮道具</div><div class="ip-desc">桌面级龙舞/狮舞，可动关节，¥39-129，春节爆品</div><div class="ip-ptags"><span class="ip-ptag green">春节爆品</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🪭 秧歌扇/水袖丝巾</div><div class="ip-desc">舞蹈道具衍生品，国风舞蹈爱好者/汉服搭配</div><div class="ip-ptags"><span class="ip-ptag green">汉服联动</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🧧 龙狮主题摆件/手办</div><div class="ip-desc">舞龙舞狮造型桌面摆件，春节/开业送礼</div><div class="ip-ptags"><span class="ip-ptag green">送礼属性</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🎀 民族舞蹈服饰元素</div><div class="ip-desc">秧歌/腰鼓服饰元素设计成日常配饰</div><div class="ip-ptags"><span class="ip-ptag">小众市场</span></div></div>
+    </div>
+  </div>
+
+  <!-- IP Category 6: 曲艺 -->
+  <div class="ip-category">
+    <div class="ip-header">
+      <span class="ip-icon">🎤</span><span class="ip-name">曲艺 → 小品类文创</span>
+      <span class="ip-class" style="background:rgba(248,81,73,0.1);color:var(--red);padding:2px 10px;border-radius:10px;">市场小众，做精品线</span>
+    </div>
+    <div class="ip-products">
+      <div class="ip-product"><div class="ip-pname">🎋 快板（成品）</div><div class="ip-desc">竹制/红木快板，成人/儿童款，¥19-69</div><div class="ip-ptags"><span class="ip-ptag">经典工具</span></div></div>
+      <div class="ip-product"><div class="ip-pname">🪭 相声折扇/醒木</div><div class="ip-desc">德云社风格文创，折扇+醒木+手绢套装</div><div class="ip-ptags"><span class="ip-ptag">IP联动</span></div></div>
+      <div class="ip-product"><div class="ip-pname">📖 评书故事卡/有声书</div><div class="ip-desc">经典评书段子+角色卡牌，有声+实体结合</div><div class="ip-ptags"><span class="ip-ptag">内容产品</span></div></div>
+      <div class="ip-product"><div class="ip-pname">☕ 曲艺主题杯具/文创</div><div class="ip-desc">"且听下回分解"主题马克杯/茶具，¥39-99</div><div class="ip-ptags"><span class="ip-ptag">趣味文创</span></div></div>
+    </div>
+  </div>
+
+  <!-- ============ STRATEGIC SUMMARY ============ -->
+  <hr class="divider">
+
+  <h2 class="section-title"><span class="icon">🎯</span> 双赛道战略总图</h2>
+
+  <div class="strategy-box">
+    <h3>🏗️ 非遗电商产品矩阵架构</h3>
+    <table style="width:100%;margin:14px 0;font-size:0.9em;border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:2px solid var(--border);">
+          <th style="padding:10px;text-align:left;">赛道</th><th style="padding:10px;text-align:left;">核心模式</th>
+          <th style="padding:10px;text-align:left;">目标客群</th><th style="padding:10px;text-align:left;">客单价区间</th>
+          <th style="padding:10px;text-align:left;">启动优先级</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border);background:rgba(63,185,80,0.03);">
+          <td style="padding:10px;font-weight:700;color:var(--green);">🧵 方向一 · DIY</td>
+          <td style="padding:10px;">材料包+视频教程<br>用户动手体验</td>
+          <td style="padding:10px;">女性25-40岁为主<br>亲子家庭/手工爱好者</td>
+          <td style="padding:10px;">¥19-199</td>
+          <td style="padding:10px;color:var(--gold);font-weight:700;">🔥 第一优先</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);background:rgba(88,166,255,0.03);">
+          <td style="padding:10px;font-weight:700;color:var(--blue);">📦 方向二 · IP成品</td>
+          <td style="padding:10px;">非遗IP赋能成品<br>直接购买使用/收藏</td>
+          <td style="padding:10px;">全年龄段<br>节日购买者/国潮爱好者</td>
+          <td style="padding:10px;">¥9-299</td>
+          <td style="padding:10px;color:var(--blue);font-weight:700;">第二优先</td>
+        </tr>
+        <tr style="background:rgba(210,153,34,0.03);">
+          <td style="padding:10px;font-weight:700;color:var(--orange);">🔗 交叉线</td>
+          <td style="padding:10px;">半DIY半成品<br>降低门槛体验</td>
+          <td style="padding:10px;">入门手工者<br>礼品购买者</td>
+          <td style="padding:10px;">¥29-159</td>
+          <td style="padding:10px;color:var(--orange);">补充线</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0;">
+
+    <div class="strategy-box" style="border-color:rgba(63,185,80,0.3);">
+      <h3>🧵 方向一：DIY启动路线图</h3>
+      <ul>
+        <li><strong>Phase 1</strong>：扎染 + 香囊（体验感最强+节日爆发）</li>
+        <li><strong>Phase 2</strong>：刺绣 + 绒花/缠花（成熟品类+增速最快）</li>
+        <li><strong>Phase 3</strong>：陶艺 + 中国结（稳定基本盘+高复购）</li>
+        <li><strong>Phase 4</strong>：造纸/印刷 + 剪纸（差异化补充）</li>
+      </ul>
+    </div>
+
+    <div class="strategy-box" style="border-color:rgba(88,166,255,0.3);">
+      <h3>📦 方向二：IP成品启动路线图</h3>
+      <ul>
+        <li><strong>Phase 1</strong>：民俗节庆（花灯/对联/红包，脉冲爆发）</li>
+        <li><strong>Phase 2</strong>：戏剧文创（脸谱/人偶/书签，视觉强辨识）</li>
+        <li><strong>Phase 3</strong>：文学衍生（绘本/拼图/卡牌，内容IP）</li>
+        <li><strong>Phase 4</strong>：音乐+舞蹈（乐器文创/舞龙模型，精品线）</li>
+        <li><strong>Phase 5</strong>：曲艺（快板/扇子，小众精品）</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <p>🏮 非遗产品电商化调研报告 v2.0 | 双赛道完整版</p>
+    <p>方向一（DIY材料包）× 方向二（IP成品）= 非遗十大类100%覆盖</p>
+    <p style="margin-top:6px;color:var(--text2);font-size:0.78em;">
+      项目目录: ~/ich-diy-research/report.html | 下一步：选定SKU → 竞品分析 → 价格策略 → 供应链
+    </p>
+  </div>
+
+</div>
+</body>
+</html>

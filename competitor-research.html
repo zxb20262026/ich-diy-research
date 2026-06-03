@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>非遗DIY竞品调研 | 8品类深度分析</title>
+<style>
+  :root {
+    --bg: #0d1117; --card: #161b22; --border: #30363d;
+    --text: #c9d1d9; --text2: #8b949e;
+    --green: #3fb950; --orange: #d29922; --red: #f85149;
+    --blue: #58a6ff; --purple: #bc8cff; --cyan: #39d2c0; --gold: #e3b341;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; line-height:1.6; }
+  .container { max-width:1300px; margin:0 auto; padding:20px; }
+
+  .header { background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460); border-bottom:3px solid var(--gold); padding:40px 20px; text-align:center; }
+  .header h1 { font-size:2.2em; background:linear-gradient(135deg,var(--gold),#f0c060,var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:8px; }
+
+  .nav-strip { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; padding:14px 0; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg); z-index:10; }
+  .nav-link { padding:6px 14px; border-radius:16px; font-size:0.82em; font-weight:600; color:var(--text2); text-decoration:none; border:1px solid transparent; transition:all 0.2s; cursor:pointer; }
+  .nav-link:hover { border-color:var(--gold); color:var(--gold); }
+
+  .section-title { font-size:1.6em; margin:40px 0 20px; padding-bottom:8px; border-bottom:2px solid var(--border); display:flex; align-items:center; gap:10px; }
+  .rank-badge { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1em; flex-shrink:0; }
+  .r1 { background:linear-gradient(135deg,#e3b341,#f0c060); color:#0d1117; }
+  .r2 { background:linear-gradient(135deg,#c0c0c0,#d0d0d0); color:#0d1117; }
+  .r3 { background:linear-gradient(135deg,#cd7f32,#d4883d); color:#fff; }
+  .r4 { background:rgba(227,179,65,0.2); color:var(--gold); }
+  .r5 { background:rgba(88,166,255,0.2); color:var(--blue); }
+  .r6 { background:rgba(188,140,255,0.2); color:var(--purple); }
+  .r7 { background:rgba(57,210,192,0.2); color:var(--cyan); }
+  .r8 { background:rgba(139,148,158,0.2); color:var(--text2); }
+
+  /* Category container */
+  .cat-block { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; margin:20px 0; }
+  .cat-block.featured { border-color:var(--gold); box-shadow:0 0 20px rgba(227,179,65,0.08); }
+
+  /* Top row */
+  .cat-top { display:grid; grid-template-columns:2fr 1fr; gap:20px; margin-bottom:16px; }
+  @media (max-width:768px) { .cat-top { grid-template-columns:1fr; } }
+
+  /* Overview box */
+  .overview-box { }
+  .overview-box .cat-name { font-size:1.3em; font-weight:700; }
+  .overview-box .cat-desc { font-size:0.9em; color:var(--text2); margin:8px 0; }
+  .overview-box .metrics { display:flex; gap:16px; flex-wrap:wrap; margin:12px 0; }
+  .metric { display:flex; flex-direction:column; }
+  .metric .m-val { font-size:1.3em; font-weight:700; }
+  .metric .m-label { font-size:0.78em; color:var(--text2); }
+  .metric.green .m-val { color:var(--green); }
+  .metric.gold .m-val { color:var(--gold); }
+  .metric.red .m-val { color:var(--red); }
+  .metric.blue .m-val { color:var(--blue); }
+
+  /* Scorecard */
+  .scorecard { background:rgba(255,255,255,0.03); border-radius:10px; padding:16px; border:1px solid var(--border); }
+  .scorecard h4 { font-size:0.9em; color:var(--text2); margin-bottom:10px; }
+  .score-row { display:flex; justify-content:space-between; align-items:center; margin:6px 0; }
+  .score-row .s-label { font-size:0.82em; }
+  .score-row .s-bar-bg { width:100px; height:5px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden; margin:0 10px; }
+  .score-row .s-bar { height:100%; border-radius:3px; }
+  .s-high { background:var(--green); } .s-mid { background:var(--orange); }
+  .s-low { background:var(--red); } .s-info { background:var(--blue); }
+
+  /* Data tables */
+  .data-table { width:100%; border-collapse:collapse; font-size:0.85em; margin:12px 0; }
+  .data-table th { background:#1c2533; color:var(--text2); padding:8px 10px; text-align:left; font-weight:600; border-bottom:1px solid var(--border); font-size:0.8em; text-transform:uppercase; }
+  .data-table td { padding:8px 10px; border-bottom:1px solid rgba(48,54,61,0.5); }
+  .data-table tr:last-child td { border-bottom:none; }
+  .data-table tr:hover { background:rgba(255,255,255,0.02); }
+
+  .tag { display:inline-block; padding:2px 8px; border-radius:8px; font-size:0.75em; font-weight:600; }
+  .tag-green { background:rgba(63,185,80,0.15); color:var(--green); }
+  .tag-gold { background:rgba(227,179,65,0.15); color:var(--gold); }
+  .tag-red { background:rgba(248,81,73,0.15); color:var(--red); }
+  .tag-blue { background:rgba(88,166,255,0.15); color:var(--blue); }
+  .tag-purple { background:rgba(188,140,255,0.15); color:var(--purple); }
+
+  /* Diff opportunity box */
+  .diff-box { background:linear-gradient(135deg,rgba(227,179,65,0.06),rgba(227,179,65,0.02)); border:1px solid rgba(227,179,65,0.2); border-radius:10px; padding:16px; margin-top:12px; }
+  .diff-box h4 { font-size:0.95em; color:var(--gold); margin-bottom:8px; }
+  .diff-box .diff-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; }
+  .diff-item { padding:10px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid var(--border); }
+  .diff-item .di-title { font-weight:600; font-size:0.9em; }
+  .diff-item .di-desc { font-size:0.8em; color:var(--text2); margin-top:4px; }
+  .diff-item .di-score { font-size:0.78em; color:var(--orange); margin-top:4px; }
+
+  /* Competitor grid */
+  .comp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:10px; margin:12px 0; }
+  .comp-card { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:8px; padding:12px; }
+  .comp-card .cc-name { font-weight:600; }
+  .comp-card .cc-price { color:var(--green); font-weight:700; }
+  .comp-card .cc-info { font-size:0.8em; color:var(--text2); margin-top:4px; }
+
+  .footer { text-align:center; padding:30px; color:var(--text2); font-size:0.82em; border-top:1px solid var(--border); margin-top:40px; }
+
+  /* Tabs */
+  .tabs { display:flex; gap:4px; margin:14px 0; flex-wrap:wrap; }
+  .tab-btn { padding:6px 12px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; font-size:0.82em; transition:all 0.2s; }
+  .tab-btn.active { background:rgba(88,166,255,0.15); color:var(--blue); border-color:rgba(88,166,255,0.3); }
+
+  .highlight { color:var(--gold); font-weight:600; }
+  .warn { color:var(--red); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🔬 方向一 · 8品类完整竞品调研</h1>
+  <p style="color:var(--text2);">非遗DIY材料包 · 电商竞品格局 · 差异化机会 · 切入建议</p>
+</div>
+
+<div class="nav-strip">
+  <a class="nav-link" href="#c1">🥇刺绣</a>
+  <a class="nav-link" href="#c2">🥈扎染</a>
+  <a class="nav-link" href="#c3">🥉绒花/缠花</a>
+  <a class="nav-link" href="#c4">🌿香囊</a>
+  <a class="nav-link" href="#c5">🏺陶艺/泥塑</a>
+  <a class="nav-link" href="#c6">🪢中国结/绳编</a>
+  <a class="nav-link" href="#c7">📜造纸/活字</a>
+  <a class="nav-link" href="#c8">✂️剪纸</a>
+  <a class="nav-link" href="#summary">📊汇总对比</a>
+</div>
+
+<div class="container">
+
+  <!-- ======================================== -->
+  <!-- CATEGORY 1: EMBROIDERY -->
+  <!-- ======================================== -->
+  <div class="section-title" id="c1">
+    <span class="rank-badge r1">1</span>
+    🥇 刺绣DIY — 成熟品类，巨头环伺
+  </div>
+
+  <div class="cat-block featured">
+    <div class="cat-top">
+      <div class="overview-box">
+        <div class="cat-name">刺绣材料包 · Embroidery DIY Kit</div>
+        <div class="cat-desc">淘宝"刺绣diy"月搜索量级最高，合并十字绣/欧式绣/法绣/苏绣等多流派。品类极度成熟，头部品牌已建立护城河，但非遗细分方向（苏绣/苗绣/蜀绣专题）仍有空白。</div>
+        <div class="metrics">
+          <div class="metric green"><span class="m-val">★★★★★</span><span class="m-label">市场成熟度</span></div>
+          <div class="metric red"><span class="m-val">★★★★☆</span><span class="m-label">竞争激烈度</span></div>
+          <div class="metric gold"><span class="m-val">中等</span><span class="m-label">差异化空间</span></div>
+          <div class="metric blue"><span class="m-val">¥39-199</span><span class="m-label">主流价格带</span></div>
+        </div>
+      </div>
+      <div class="scorecard">
+        <h4>📊 竞争格局评分</h4>
+        <div class="score-row"><span class="s-label">品牌集中度</span><span class="s-bar-bg"><div class="s-bar s-high" style="width:85%"></div></span><span>高</span></div>
+        <div class="score-row"><span class="s-label">价格战程度</span><span class="s-bar-bg"><div class="s-bar s-mid" style="width:60%"></div></span><span>中</span></div>
+        <div class="score-row"><span class="s-label">设计差异化</span><span class="s-bar-bg"><div class="s-bar s-info" style="width:70%"></div></span><span>较高</span></div>
+        <div class="score-row"><span class="s-label">非遗IP潜力</span><span class="s-bar-bg"><div class="s-bar s-high" style="width:90%"></div></span><span>极高</span></div>
+        <div class="score-row"><span class="s-label">新品牌难度</span><span class="s-bar-bg"><div class="s-bar s-low" style="width:75%"></div></span><span>中高</span></div>
+      </div>
+    </div>
+
+    <h4 style="color:var(--blue);font-size:0.9em;margin:14px 0 8px;">🏪 主要竞品格局</h4>
+    <div class="comp-grid">
+      <div class="comp-card"><div class="cc-name">KS十字绣</div><div class="cc-price">¥29-199</div><div class="cc-info">十字绣品类老大，线下+线上双渠道，品牌认知度最高</div></div>
+      <div class="comp-card"><div class="cc-name">DMC绣线套装</div><div class="cc-price">¥39-159</div><div class="cc-info">法国品牌，绣线品质标杆，精致欧式刺绣方向</div></div>
+      <div class="comp-card"><div class="cc-name">皇室绣品</div><div class="cc-price">¥19-99</div><div class="cc-info">中低端十字绣，走量模式，淘宝头部店铺</div></div>
+      <div class="comp-card"><div class="cc-name">各类手作店</div><div class="cc-price">¥29-129</div><div class="cc-info">个人品牌/工作室，法绣/苏绣/珠绣等小众方向</div></div>
+      <div class="comp-card"><div class="cc-name">BJD娃娃衣刺绣</div><div class="cc-price">¥49-249</div><div class="cc-info">细分赛道：娃衣刺绣材料包，客群精准复购高</div></div>
+    </div>
+
+    <table class="data-table">
+      <tr><th>价格带</th><th>占比</th><th>典型产品</th><th>竞品密度</th></tr>
+      <tr><td>¥9.9-29</td><td>25%</td><td>简易十字绣/小图案刺绣</td><td><span class="warn">极高</span></td></tr>
+      <tr><td>¥29-69</td><td>40%</td><td>中等尺寸十字绣/入门刺绣套件</td><td><span class="warn">高</span></td></tr>
+      <tr><td>¥69-159</td><td>25%</td><td>大幅十字绣/法绣/苏绣专题</td><td>中</td></tr>
+      <tr><td>¥159+</td><td>10%</td><td>高端定制/大幅作品/联名款</td><td>低</td></tr>
+    </table>
+
+    <div class="diff-box">
+      <h4>💡 差异化机会（3个方向）</h4>
+      <div class="diff-grid">
+        <div class="diff-item">
+          <div class="di-title">🎯 非遗专题系列</div>
+          <div class="di-desc">不做通用十字绣，专攻「苏绣入门」「苗绣纹样」「蜀绣熊猫」等非遗IP专题套件，附文化故事卡+传承人视频</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 国风图案差异化</div>
+          <div class="di-desc">避开欧式花卉大众图案，设计敦煌飞天/山海经/千里江山等国风IP绣图，小红书传播力强</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 零基础速成套装</div>
+          <div class="di-desc">「1小时出成品」概念，超小尺寸+预印花+视频跟练，解决新人畏难心理，适合引流爆款</div>
+          <div class="di-score">机会指数：⭐⭐⭐</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================== -->
+  <!-- CATEGORY 2: TIE-DYE -->
+  <!-- ======================================== -->
+  <div class="section-title" id="c2">
+    <span class="rank-badge r2">2</span>
+    🥈 扎染DIY — 现象级品类，品牌真空期
+  </div>
+
+  <div class="cat-block featured">
+    <div class="cat-top">
+      <div class="overview-box">
+        <div class="cat-name">扎染材料包 · Tie-Dye Kit</div>
+        <div class="cat-desc">小红书/抖音现象级DIY品类。捆扎→浸染→拆线的过程极具"解压感"和"开盲盒"惊喜感，天然适合内容传播。目前市场品牌集中度低，头部尚未形成，<span class="highlight">新品牌最佳切入窗口期</span>。</div>
+        <div class="metrics">
+          <div class="metric green"><span class="m-val">★★★☆☆</span><span class="m-label">市场成熟度</span></div>
+          <div class="metric green"><span class="m-val">★★☆☆☆</span><span class="m-label">竞争激烈度</span></div>
+          <div class="metric gold"><span class="m-val">高</span><span class="m-label">差异化空间</span></div>
+          <div class="metric blue"><span class="m-val">¥29-99</span><span class="m-label">主流价格带</span></div>
+        </div>
+      </div>
+      <div class="scorecard">
+        <h4>📊 竞争格局评分</h4>
+        <div class="score-row"><span class="s-label">品牌集中度</span><span class="s-bar-bg"><div class="s-bar s-info" style="width:25%"></div></span><span>极低</span></div>
+        <div class="score-row"><span class="s-label">价格战程度</span><span class="s-bar-bg"><div class="s-bar s-info" style="width:35%"></div></span><span>低</span></div>
+        <div class="score-row"><span class="s-label">设计差异化</span><span class="s-bar-bg"><div class="s-bar s-high" style="width:85%"></div></span><span>极高</span></div>
+        <div class="score-row"><span class="s-label">非遗IP潜力</span><span class="s-bar-bg"><div class="s-bar s-high" style="width:80%"></div></span><span>高</span></div>
+        <div class="score-row"><span class="s-label">新品牌难度</span><span class="s-bar-bg"><div class="s-bar s-low" style="width:20%"></div></span><span>低</span></div>
+      </div>
+    </div>
+
+    <h4 style="color:var(--blue);font-size:0.9em;margin:14px 0 8px;">🏪 主要竞品格局</h4>
+    <div class="comp-grid">
+      <div class="comp-card"><div class="cc-name">白族扎染商家</div><div class="cc-price">¥39-129</div><div class="cc-info">云南白族扎染产地直发，天然靛蓝染料，文化正宗但运营弱</div></div>
+      <div class="comp-card"><div class="cc-name">综合手工店</div><div class="cc-price">¥29-79</div><div class="cc-info">淘宝综合手工店铺附带扎染线，非专营，品控参差不齐</div></div>
+      <div class="comp-card"><div class="cc-name">Tie-Dye进口</div><div class="cc-price">¥69-199</div><div class="cc-info">Tulip等美国品牌，彩虹扎染风格，偏青少年/派对场景</div></div>
+      <div class="comp-card"><div class="cc-name">小红书个体户</div><div class="cc-price">¥25-59</div><div class="cc-info">个人卖家，材料包+视频教程，品质不稳定但内容驱动</div></div>
+    </div>
+
+    <table class="data-table">
+      <tr><th>价格带</th><th>占比</th><th>典型产品</th><th>特征</th></tr>
+      <tr><td>¥9.9-29</td><td>20%</td><td>单色染料+1条方巾</td><td>引流款，体验不完整</td></tr>
+      <tr><td>¥29-59</td><td>45%</td><td>多色染料+T恤/方巾/帆布袋</td><td><span class="highlight">核心价格带</span></td></tr>
+      <tr><td>¥59-99</td><td>25%</td><td>多载体+天然靛蓝+资料包</td><td>品质升级方向</td></tr>
+      <tr><td>¥99+</td><td>10%</td><td>亲子套装/团建大包装</td><td>场景化包装</td></tr>
+    </table>
+
+    <div class="diff-box">
+      <h4>💡 差异化机会（3个方向）</h4>
+      <div class="diff-grid">
+        <div class="diff-item">
+          <div class="di-title">🎯 白族非遗扎染IP化</div>
+          <div class="di-desc">直接打「大理白族扎染」文化牌，天然靛蓝植物染料+白族传承人联名，区别于化学染料的廉价感</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 多载体场景套装</div>
+          <div class="di-desc">T恤+帆布包+方巾+发带「一盒四件」，亲子款/情侣款/闺蜜款场景化包装，拉高客单价</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 视频教程差异化</div>
+          <div class="di-desc">附赠10+种扎法视频教程（螺旋纹/鱼鳞纹/云染…），扫二维码看教程，解决"不知道怎么扎好看"痛点</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================== -->
+  <!-- CATEGORY 3: RONGHUA / CHANHUA -->
+  <!-- ======================================== -->
+  <div class="section-title" id="c3">
+    <span class="rank-badge r3">3</span>
+    🥉 绒花/缠花 — 增速最快，手艺人主导
+  </div>
+
+  <div class="cat-block featured">
+    <div class="cat-top">
+      <div class="overview-box">
+        <div class="cat-name">绒花 + 缠花材料包 · Velvet & Thread Flower Kit</div>
+        <div class="cat-desc">近一年小红书增速超100%，汉服经济最强关联品类。绒花（蚕丝绒条塑形）缠花（丝线缠绕铜丝）均为传统发饰工艺，成品颜值极高。当前市场以手艺人个体店为主，<span class="highlight">尚无规模化品牌</span>，材料包标准化程度低。</div>
+        <div class="metrics">
+          <div class="metric green"><span class="m-val">★★☆☆☆</span><span class="m-label">市场成熟度</span></div>
+          <div class="metric green"><span class="m-val">★☆☆☆☆</span><span class="m-label">竞争激烈度</span></div>
+          <div class="metric gold"><span class="m-val">极高</span><span class="m-label">差异化空间</span></div>
+          <div class="metric blue"><span class="m-val">¥39-129</span><span class="m-label">主流价格带</span></div>
+        </div>
+      </div>
+      <div class="scorecard">
+        <h4>📊 竞争格局评分</h4>
+        <div class="score-row"><span class="s-label">品牌集中度</span><span class="s-bar-bg"><div class="s-bar s-info" style="width:10%"></div></span><span>极低</span></div>
+        <div class="score-row"><span class="s-label">价格战程度</span><span class="s-bar-bg"><div class="s-bar s-info" style="width:15%"></div></span><span>极低</span></div>
+        <div class="score-row"><span class="s-label">设计差异化</span><span class="s-bar-bg"><div class="s-bar s-high" style="width:95%"></div></span><span>极高</span></div>
+        <div class="score-row"><span class="s-label">非遗IP潜力</span><span class="s-bar-bg"><div class="s-bar s-high" style="width:95%"></div></span><span>极高</span></div>
+        <div class="score-row"><span class="s-label">新品牌难度</span><span class="s-bar-bg"><div class="s-bar s-mid" style="width:40%"></div></span><span>中低</span></div>
+      </div>
+    </div>
+
+    <h4 style="color:var(--blue);font-size:0.9em;margin:14px 0 8px;">🏪 主要竞品格局</h4>
+    <div class="comp-grid">
+      <div class="comp-card"><div class="cc-name">小红书手艺人</div><div class="cc-price">¥39-129</div><div class="cc-info">主流渠道，粉丝量1k-50k个体户，视频教程+材料包，品质差异大</div></div>
+      <div class="comp-card"><div class="cc-name">淘宝工作室</div><div class="cc-price">¥29-99</div><div class="cc-info">蚕丝绒条/丝光线+铜丝+工具套装，品控不一，教学视频质量参差</div></div>
+      <div class="comp-card"><div class="cc-name">故宫/博物馆联名</div><div class="cc-price">¥99-299</div><div class="cc-info">高端成品为主，极少出材料包，IP授权门槛高</div></div>
+      <div class="comp-card"><div class="cc-name">汉服配饰店</div><div class="cc-price">¥49-169</div><div class="cc-info">成品为主，少数附带简易材料包，非主营</div></div>
+    </div>
+
+    <table class="data-table">
+      <tr><th>产品形态</th><th>绒花</th><th>缠花</th><th>入门门槛</th></tr>
+      <tr><td>材料</td><td>蚕丝绒条+铜丝+剪刀</td><td>丝光线+铜丝+纸板+白胶</td><td>缠花<绒花</td></tr>
+      <tr><td>教学视频需求</td><td><span class="warn">必需</span></td><td><span class="warn">必需</span></td><td>视频是核心竞争力</td></tr>
+      <tr><td>成品形态</td><td>发簪/胸针/耳饰</td><td>发簪/胸针/摆件</td><td>送礼属性强</td></tr>
+      <tr><td>小红书话题量</td><td>增速极快</td><td>稳定增长</td><td>内容传播力强</td></tr>
+    </table>
+
+    <div class="diff-box">
+      <h4>💡 差异化机会（3个方向）</h4>
+      <div class="diff-grid">
+        <div class="diff-item">
+          <div class="di-title">🎯 品牌化材料包</div>
+          <div class="di-desc">第一个做标准化、品牌化的绒花/缠花材料包。统一包装+品牌视觉+专业视频教程，碾压个体户</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 分级产品线</div>
+          <div class="di-desc">「初学·梅花」→「进阶·牡丹」→「高阶·凤凰」三级难度体系，用户从¥39入门到¥129进阶的复购链路</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 汉服场景联名</div>
+          <div class="di-desc">与汉服品牌/汉服博主联名，推出「唐风发簪」「宋韵步摇」等主题套件，精准触达汉服圈层</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================== -->
+  <!-- CATEGORY 4: SACHET -->
+  <!-- ======================================== -->
+  <div class="section-title" id="c4">
+    <span class="rank-badge r4">4</span>
+    🌿 香囊DIY — 端午脉冲型，中药+国潮双概念
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-top">
+      <div class="overview-box">
+        <div class="cat-name">香囊DIY材料包 · Sachet Making Kit</div>
+        <div class="cat-desc">端午脉冲爆发力最强的DIY品类。中药配方+手工缝制=文化+实用双重价值。材料成本极低（整套<¥5），客单价¥19-59，利润率极高。但季节性强，端午前后爆发，<span class="highlight">需要日常化延展策略</span>。</div>
+        <div class="metrics">
+          <div class="metric green"><span class="m-val">★★★☆☆</span><span class="m-label">市场成熟度</span></div>
+          <div class="metric gold"><span class="m-val">★★☆☆☆</span><span class="m-label">竞争激烈度</span></div>
+          <div class="metric gold"><span class="m-val">中高</span><span class="m-label">差异化空间</span></div>
+          <div class="metric blue"><span class="m-val">¥19-59</span><span class="m-label">主流价格带</span></div>
+        </div>
+      </div>
+      <div class="scorecard">
+        <h4>📊 竞争格局评分</h4>
+        <div class="score-row"><span class="s-label">品牌集中度</span><span class="s-bar-bg"><div class="s-bar s-info" style="width:35%"></div></span><span>低</span></div>
+        <div class="score-row"><span class="s-label">价格战程度</span><span class="s-bar-bg"><div class="s-bar s-mid" style="width:45%"></div></span><span>中低</span></div>
+        <div class="score-row"><span class="s-label">设计差异化</span><span class="s-bar-bg"><div class="s-bar s-mid" style="width:55%"></div></span><span>中</span></div>
+        <div class="score-row"><span class="s-label">季节依赖性</span><span class="s-bar-bg"><div class="s-bar s-low" style="width:80%"></div></span><span>强</span></div>
+        <div class="score-row"><span class="s-label">利润率</span><span class="s-bar-bg"><div class="s-bar s-high" style="width:90%"></div></span><span>极高</span></div>
+      </div>
+    </div>
+
+    <h4 style="color:var(--blue);font-size:0.9em;margin:14px 0 8px;">🏪 主要竞品格局</h4>
+    <div class="comp-grid">
+      <div class="comp-card"><div class="cc-name">同仁堂等药企</div><div class="cc-price">¥29-89</div><div class="cc-info">中药配方权威背书，但产品偏传统、设计老化，年轻化不足</div></div>
+      <div class="comp-card"><div class="cc-name">手工电商店铺</div><div class="cc-price">¥15-49</div><div class="cc-info">布料+中药材+丝线，设计参差，端午季大量涌现后消失</div></div>
+      <div class="comp-card"><div class="cc-name">博物馆文创</div><div class="cc-price">¥39-129</div><div class="cc-info">故宫/国博等IP联名香囊，设计精美但价格高、非DIY</div></div>
+      <div class="comp-card"><div class="cc-name">亲子教育品牌</div><div class="cc-price">¥29-79</div><div class="cc-info">材料包+文化讲解，偏教育场景，溢价空间大</div></div>
+    </div>
+
+    <table class="data-table">
+      <tr><th>产品形态</th><th>价格带</th><th>目标场景</th><th>利润率</th></tr>
+      <tr><td>基础款材料包</td><td>¥9.9-29</td><td>自用体验/节日</td><td><span class="highlight">60-70%</span></td></tr>
+      <tr><td>品牌化套装</td><td>¥29-59</td><td>送礼/团购</td><td><span class="highlight">50-65%</span></td></tr>
+      <tr><td>亲子教育套装</td><td>¥39-79</td><td>学校/机构采购</td><td><span class="highlight">55-70%</span></td></tr>
+      <tr><td>高端礼盒</td><td>¥69-199</td><td>送礼/企业定制</td><td>40-55%</td></tr>
+    </table>
+
+    <div class="diff-box">
+      <h4>💡 差异化机会（3个方向）</h4>
+      <div class="diff-grid">
+        <div class="diff-item">
+          <div class="di-title">🎯 节气香囊系列化</div>
+          <div class="di-desc">不做一次性端午生意。打造「24节气香囊」全年产品线：春·安神/夏·驱蚊/秋·润燥/冬·暖身，每月一个主题</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 中药配方差异化</div>
+          <div class="di-desc">与中医馆/中药品牌联名，提供5-8种经典配方（驱蚊/安神/提神/防感/祛湿），配方卡即内容营销</div>
+          <div class="di-score">机会指数：⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 设计风格国潮化</div>
+          <div class="di-desc">抛弃大妈风碎花布，用敦煌配色/宋韵美学/新中式设计，让香囊成为年轻人的时尚配件</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================== -->
+  <!-- CATEGORY 5: POTTERY -->
+  <!-- ======================================== -->
+  <div class="section-title" id="c5">
+    <span class="rank-badge r5">5</span>
+    🏺 陶艺/泥塑DIY — 线下反哺线上，亲子刚需
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-top">
+      <div class="overview-box">
+        <div class="cat-name">陶艺 + 泥塑DIY · Pottery & Clay Kit</div>
+        <div class="cat-desc">线下陶艺体验的成熟反向推动线上材料包市场。亲子+情侣双客群稳定。陶土/超轻粘土/软陶三大材料体系各有市场。泥塑方向（泥人张/惠山泥人彩绘）可做非遗差异化。<span class="highlight">材料消耗快，天然高复购</span>。</div>
+        <div class="metrics">
+          <div class="metric green"><span class="m-val">★★★★☆</span><span class="m-label">市场成熟度</span></div>
+          <div class="metric gold"><span class="m-val">★★★☆☆</span><span class="m-label">竞争激烈度</span></div>
+          <div class="metric gold"><span class="m-val">中</span><span class="m-label">差异化空间</span></div>
+          <div class="metric blue"><span class="m-val">¥29-199</span><span class="m-label">主流价格带</span></div>
+        </div>
+      </div>
+      <div class="scorecard">
+        <h4>📊 竞争格局评分</h4>
+        <div class="score-row"><span class="s-label">品牌集中度</span><span class="s-bar-bg"><div class="s-bar s-mid" style="width:50%"></div></span><span>中</span></div>
+        <div class="score-row"><span class="s-label">价格战程度</span><span class="s-bar-bg"><div class="s-bar s-mid" style="width:55%"></div></span><span>中</span></div>
+        <div class="score-row"><span class="s-label">材料消耗复购</span><span class="s-bar-bg"><div class="s-bar s-high" style="width:95%"></div></span><span>极高</span></div>
+        <div class="score-row"><span class="s-label">非遗差异化</span><span class="s-bar-bg"><div class="s-bar s-mid" style="width:60%"></div></span><span>中高</span></div>
+        <div class="score-row"><span class="s-label">新品牌难度</span><span class="s-bar-bg"><div class="s-bar s-mid" style="width:50%"></div></span><span>中</span></div>
+      </div>
+    </div>
+
+    <h4 style="color:var(--blue);font-size:0.9em;margin:14px 0 8px;">🏪 主要竞品格局</h4>
+    <div class="comp-grid">
+      <div class="comp-card"><div class="cc-name">培乐多/乐高</div><div class="cc-price">¥49-299</div><div class="cc-info">国际品牌，超轻粘土/彩泥，非陶艺但占据亲子手工心智</div></div>
+      <div class="comp-card"><div class="cc-name">陶艺泥料品牌</div><div class="cc-price">¥19-99</div><div class="cc-info">专业陶泥/瓷泥品牌，面向成人爱好者，偏工具属性</div></div>
+      <div class="comp-card"><div class="cc-name">亲子手工套装</div><div class="cc-price">¥39-129</div><div class="cc-info">综合手工品牌附带陶艺线，非专营，品控中等</div></div>
+      <div class="comp-card"><div class="cc-name">线下陶艺馆线上店</div><div class="cc-price">¥59-199</div><div class="cc-info">体验馆延伸的线上店，课程+材料包绑定，有品牌信任</div></div>
+    </div>
+
+    <div class="diff-box">
+      <h4>💡 差异化机会（3个方向）</h4>
+      <div class="diff-grid">
+        <div class="diff-item">
+          <div class="di-title">🎯 非遗泥塑彩绘套装</div>
+          <div class="di-desc">不做通用陶艺，做「泥人张彩绘」「惠山泥人上色」非遗专题。白胚泥人+颜料+教程，文化+手工双价值</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 亲子考古/文化体验</div>
+          <div class="di-desc">「兵马俑挖掘+修复」「青花瓷绘制」等场景化套装，兼具玩具体验+文化教育，客单价可拉高</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 材料耗材订阅制</div>
+          <div class="di-desc">陶泥/粘土用完即补，月度订阅材料包+每月新主题，锁定长期复购</div>
+          <div class="di-score">机会指数：⭐⭐⭐</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================== -->
+  <!-- CATEGORY 6: KNOT -->
+  <!-- ======================================== -->
+  <div class="section-title" id="c6">
+    <span class="rank-badge r6">6</span>
+    🪢 中国结/绳编 — 复购之王，品牌化洼地
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-top">
+      <div class="overview-box">
+        <div class="cat-name">中国结 + 绳编DIY · Chinese Knot & Macrame Kit</div>
+        <div class="cat-desc">材料极简（线绳）、成本极低、复购率全品类最高。春节/婚庆/本命年多场景。但当前市场极其分散，99%为无品牌散装线绳或个体卖家。<span class="highlight">品牌真空</span>，谁先做品牌化谁占心智。</div>
+        <div class="metrics">
+          <div class="metric green"><span class="m-val">★★★★☆</span><span class="m-label">市场成熟度</span></div>
+          <div class="metric green"><span class="m-val">★☆☆☆☆</span><span class="m-label">品牌化程度</span></div>
+          <div class="metric gold"><span class="m-val">中高</span><span class="m-label">差异化空间</span></div>
+          <div class="metric blue"><span class="m-val">¥19-69</span><span class="m-label">主流价格带</span></div>
+        </div>
+      </div>
+      <div class="scorecard">
+        <h4>📊 竞争格局评分</h4>
+        <div class="score-row"><span class="s-label">品牌集中度</span><span class="s-bar-bg"><div class="s-bar s-info" style="width:5%"></div></span><span>极低</span></div>
+        <div class="score-row"><span class="s-label">价格战程度</span><span class="s-bar-bg"><div class="s-bar s-mid" style="width:40%"></div></span><span>中低</span></div>
+        <div class="score-row"><span class="s-label">复购率</span><span class="s-bar-bg"><div class="s-bar s-high" style="width:95%"></div></span><span>极高</span></div>
+        <div class="score-row"><span class="s-label">场景丰富度</span><span class="s-bar-bg"><div class="s-bar s-high" style="width:85%"></div></span><span>高</span></div>
+        <div class="score-row"><span class="s-label">利润率</span><span class="s-bar-bg"><div class="s-bar s-high" style="width:85%"></div></span><span>极高</span></div>
+      </div>
+    </div>
+
+    <h4 style="color:var(--blue);font-size:0.9em;margin:14px 0 8px;">🏪 主要竞品格局</h4>
+    <div class="comp-grid">
+      <div class="comp-card"><div class="cc-name">散装线绳卖家</div><div class="cc-price">¥5-29</div><div class="cc-info">主流形态，论斤/论卷卖线绳，无教程无品牌，利润极薄</div></div>
+      <div class="comp-card"><div class="cc-name">手作个体店</div><div class="cc-price">¥19-59</div><div class="cc-info">小红书/淘宝个体卖家，含教程但包装简陋，品质不稳定</div></div>
+      <div class="comp-card"><div class="cc-name">珠宝配件品牌</div><div class="cc-price">¥29-99</div><div class="cc-info">如"结绳记"等已品牌化的绳编饰品店，主要卖成品</div></div>
+      <div class="comp-card"><div class="cc-name"><b>品牌化材料包</b></div><div class="cc-price" style="color:var(--gold);">空白!</div><div class="cc-info"><span class="highlight">暂无明显品牌化材料包玩家</span></div></div>
+    </div>
+
+    <div class="diff-box">
+      <h4>💡 差异化机会（3个方向）</h4>
+      <div class="diff-grid">
+        <div class="diff-item">
+          <div class="di-title">🎯 主题场景套装</div>
+          <div class="di-desc">「高考祈福手绳」「本命年红绳」「婚礼喜结」「端午五彩绳」— 一个品类四个场景，全年可卖</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 品牌化视觉+包装</div>
+          <div class="di-desc">第一个用品牌思维做中国结DIY。精美包装+分级教程卡+品牌故事，从散装线绳中脱颖而出</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 寓意内容化</div>
+          <div class="di-desc">每个结都有寓意（平安结/如意结/同心结），教程+文化故事+使用场景=内容即商品</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================== -->
+  <!-- CATEGORY 7: PAPER / PRINT -->
+  <!-- ======================================== -->
+  <div class="section-title" id="c7">
+    <span class="rank-badge r7">7</span>
+    📜 花草纸/活字印刷 — 教育赛道，竞品少
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-top">
+      <div class="overview-box">
+        <div class="cat-name">造纸 + 活字印刷体验 · Paper Making & Movable Type Kit</div>
+        <div class="cat-desc">四大发明IP加持，亲子教育刚需品类。纸浆抄纸+加花草+晾干的过程有"神奇感"，活字印刷的"排版→刷墨→印刷"过程有操控感。竞品较少但市场体量也偏小，<span class="highlight">建议与造纸组合套装提升客单价</span>。</div>
+        <div class="metrics">
+          <div class="metric green"><span class="m-val">★★☆☆☆</span><span class="m-label">市场成熟度</span></div>
+          <div class="metric green"><span class="m-val">★☆☆☆☆</span><span class="m-label">竞争激烈度</span></div>
+          <div class="metric gold"><span class="m-val">中</span><span class="m-label">差异化空间</span></div>
+          <div class="metric blue"><span class="m-val">¥39-169</span><span class="m-label">主流价格带</span></div>
+        </div>
+      </div>
+      <div class="scorecard">
+        <h4>📊 竞争格局评分</h4>
+        <div class="score-row"><span class="s-label">竞品数量</span><span class="s-bar-bg"><div class="s-bar s-info" style="width:15%"></div></span><span>极少</span></div>
+        <div class="score-row"><span class="s-label">市场体量</span><span class="s-bar-bg"><div class="s-bar s-mid" style="width:35%"></div></span><span>偏小</span></div>
+        <div class="score-row"><span class="s-label">教育场景溢价</span><span class="s-bar-bg"><div class="s-bar s-high" style="width:80%"></div></span><span>高</span></div>
+        <div class="score-row"><span class="s-label">内容传播力</span><span class="s-bar-bg"><div class="s-bar s-mid" style="width:50%"></div></span><span>中</span></div>
+        <div class="score-row"><span class="s-label">新品牌难度</span><span class="s-bar-bg"><div class="s-bar s-info" style="width:25%"></div></span><span>低</span></div>
+      </div>
+    </div>
+
+    <div class="diff-box">
+      <h4>💡 差异化机会</h4>
+      <div class="diff-grid">
+        <div class="diff-item">
+          <div class="di-title">🎯 四大发明组合套装</div>
+          <div class="di-desc">造纸+印刷+指南针+火药（安全版）四大发明一盒，教育属性拉满，适合学校/研学机构采购</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 古诗印刷专题</div>
+          <div class="di-desc">「活字印古诗」系列（静夜思/春晓等），成品可装裱做装饰画，从体验到装饰的完整闭环</div>
+          <div class="di-score">机会指数：⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 B端研学渠道</div>
+          <div class="di-desc">瞄准学校/研学机构/博物馆教育部门，提供大包装+教案配套，B端+C端双线并进</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================== -->
+  <!-- CATEGORY 8: PAPER CUT -->
+  <!-- ======================================== -->
+  <div class="section-title" id="c8">
+    <span class="rank-badge r8">8</span>
+    ✂️ 剪纸DIY — 最传统品类，差异化靠IP
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-top">
+      <div class="overview-box">
+        <div class="cat-name">剪纸材料包 · Paper Cutting Kit</div>
+        <div class="cat-desc">中国最普及的非遗DIY，红纸+剪刀/刻刀即可。品类极度传统，淘宝竞品多且同质化严重（红纸+线稿），价格低（¥9.9-49）。<span class="highlight">差异化必须靠设计/IP/场景</span>，纯卖纸刀剪刀无壁垒。</div>
+        <div class="metrics">
+          <div class="metric green"><span class="m-val">★★★★☆</span><span class="m-label">市场成熟度</span></div>
+          <div class="metric red"><span class="m-val">★★★★☆</span><span class="m-label">同质化程度</span></div>
+          <div class="metric gold"><span class="m-val">低</span><span class="m-label">差异化空间</span></div>
+          <div class="metric blue"><span class="m-val">¥9-49</span><span class="m-label">主流价格带</span></div>
+        </div>
+      </div>
+      <div class="scorecard">
+        <h4>📊 竞争格局评分</h4>
+        <div class="score-row"><span class="s-label">品牌集中度</span><span class="s-bar-bg"><div class="s-bar s-info" style="width:5%"></div></span><span>极低</span></div>
+        <div class="score-row"><span class="s-label">同质化程度</span><span class="s-bar-bg"><div class="s-bar s-low" style="width:90%"></div></span><span>极高</span></div>
+        <div class="score-row"><span class="s-label">IP设计溢价</span><span class="s-bar-bg"><div class="s-bar s-high" style="width:80%"></div></span><span>高</span></div>
+        <div class="score-row"><span class="s-label">季节依赖性</span><span class="s-bar-bg"><div class="s-bar s-low" style="width:75%"></div></span><span>较强</span></div>
+        <div class="score-row"><span class="s-label">新品牌机会</span><span class="s-bar-bg"><div class="s-bar s-mid" style="width:50%"></div></span><span>中</span></div>
+      </div>
+    </div>
+
+    <div class="diff-box">
+      <h4>💡 差异化机会</h4>
+      <div class="diff-grid">
+        <div class="diff-item">
+          <div class="di-title">🎯 非遗大师联名图案</div>
+          <div class="di-desc">与剪纸传承人合作，推出大师设计线稿系列（蔚县剪纸/扬州剪纸等流派），区别于千篇一律的窗花</div>
+          <div class="di-score">机会指数：⭐⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 装裱+装饰一体化</div>
+          <div class="di-desc">材料包含相框/装裱材料，「剪完就能挂」，提升成品价值和客单价（¥49-79），摆脱¥9.9价格战</div>
+          <div class="di-score">机会指数：⭐⭐⭐</div>
+        </div>
+        <div class="diff-item">
+          <div class="di-title">🎯 LED光影剪纸</div>
+          <div class="di-desc">剪纸+LED灯带，做成光影装饰画/小夜灯，创新产品形态，跳出传统剪纸框架</div>
+          <div class="di-score">机会指数：⭐⭐⭐</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================== -->
+  <!-- MASTER SUMMARY -->
+  <!-- ======================================== -->
+  <div class="section-title" id="summary">
+    <span class="icon">📊</span>
+    8品类竞品调研 · 汇总对比矩阵
+  </div>
+
+  <div style="overflow-x:auto;">
+    <table class="data-table" style="min-width:1100px;">
+      <thead>
+        <tr>
+          <th>#</th><th>品类</th><th>市场成熟度</th><th>竞争烈度</th>
+          <th>品牌集中度</th><th>差异化空间</th><th>利润率</th>
+          <th>客单价</th><th>复购率</th><th>综合推荐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td>🥇 刺绣</td>
+          <td><span class="tag tag-green">成熟</span></td><td><span class="tag tag-red">高</span></td>
+          <td><span class="tag tag-red">高</span></td><td>中</td><td>中</td><td>¥39-199</td><td>高</td>
+          <td><span class="tag tag-gold">非遗专题切入</span></td>
+        </tr>
+        <tr>
+          <td>2</td><td>🥈 扎染</td>
+          <td><span class="tag tag-blue">成长</span></td><td><span class="tag tag-green">低</span></td>
+          <td><span class="tag tag-green">极低</span></td><td><span class="tag tag-gold">高</span></td><td>高</td><td>¥29-99</td><td>高</td>
+          <td><span class="tag tag-gold">🔥 最佳切入</span></td>
+        </tr>
+        <tr>
+          <td>3</td><td>🥉 绒花/缠花</td>
+          <td><span class="tag tag-blue">爆发</span></td><td><span class="tag tag-green">极低</span></td>
+          <td><span class="tag tag-green">极低</span></td><td><span class="tag tag-gold">极高</span></td><td>极高</td><td>¥39-129</td><td>高</td>
+          <td><span class="tag tag-gold">🔥 品牌化窗口</span></td>
+        </tr>
+        <tr>
+          <td>4</td><td>🌿 香囊</td>
+          <td><span class="tag tag-blue">脉冲</span></td><td><span class="tag tag-green">低</span></td>
+          <td><span class="tag tag-green">低</span></td><td>中高</td><td><span class="tag tag-gold">极高</span></td><td>¥19-59</td><td>中</td>
+          <td><span class="tag tag-gold">节日爆品</span></td>
+        </tr>
+        <tr>
+          <td>5</td><td>🏺 陶艺/泥塑</td>
+          <td><span class="tag tag-green">成熟</span></td><td>中</td><td>中</td><td>中</td><td>中</td><td>¥29-199</td><td>高</td>
+          <td><span class="tag tag-gold">非遗泥塑切入</span></td>
+        </tr>
+        <tr>
+          <td>6</td><td>🪢 中国结/绳编</td>
+          <td><span class="tag tag-green">成熟</span></td><td><span class="tag tag-green">低</span></td><td><span class="tag tag-green">极低</span></td><td><span class="tag tag-gold">高</span></td><td><span class="tag tag-gold">极高</span></td><td>¥19-69</td><td><span class="tag tag-gold">极高</span></td>
+          <td><span class="tag tag-gold">品牌化洼地</span></td>
+        </tr>
+        <tr>
+          <td>7</td><td>📜 造纸/活字</td>
+          <td><span class="tag tag-blue">蓝海</span></td><td><span class="tag tag-green">极低</span></td><td><span class="tag tag-green">极低</span></td><td>中</td><td>中高</td><td>¥39-169</td><td>中</td>
+          <td><span class="tag tag-purple">教育场景</span></td>
+        </tr>
+        <tr>
+          <td>8</td><td>✂️ 剪纸</td>
+          <td><span class="tag tag-green">成熟</span></td><td>中</td><td><span class="tag tag-green">极低</span></td><td>低</td><td>高</td><td>¥9-49</td><td>低</td>
+          <td><span class="tag tag-purple">IP驱动</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ======================================== -->
+  <!-- STRATEGIC PRIORITY -->
+  <!-- ======================================== -->
+  <div class="section-title">
+    <span class="icon">🎯</span>
+    战略建议：三步走启动路径
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:16px;">
+
+    <div class="strategy-box" style="border-color:var(--green);">
+      <h3>🚀 Phase 1：立即启动（蓝海窗口）</h3>
+      <p style="font-size:0.85em;color:var(--text2);margin:8px 0;">低竞争 × 高增长 × 品牌真空</p>
+      <table class="data-table">
+        <tr><td style="color:var(--gold);font-weight:700;">🥈 扎染DIY</td><td>竞争极低 · 增长50%+ · 白族非遗IP</td></tr>
+        <tr><td style="color:var(--gold);font-weight:700;">🥉 绒花/缠花</td><td>增速最快 · 品牌真空 · 汉服红利</td></tr>
+        <tr><td style="color:var(--gold);font-weight:700;">🪢 中国结/绳编</td><td>品牌化洼地 · 复购极高 · 零门槛</td></tr>
+      </table>
+      <p style="font-size:0.8em;color:var(--cyan);margin-top:8px;">👉 这三个品类共同特征：品牌集中度极低，先做品牌=先占心智</p>
+    </div>
+
+    <div class="strategy-box" style="border-color:var(--gold);">
+      <h3>⚡ Phase 2：快速跟进（节日+IP）</h3>
+      <p style="font-size:0.85em;color:var(--text2);margin:8px 0;">脉冲爆发 × 高利润 × IP加持</p>
+      <table class="data-table">
+        <tr><td style="color:var(--gold);font-weight:700;">🌿 香囊DIY</td><td>端午脉冲 · 利润率极高 · 节气系列化</td></tr>
+        <tr><td style="color:var(--gold);font-weight:700;">🥇 刺绣DIY</td><td>非遗专题（苏绣/苗绣）差异化</td></tr>
+      </table>
+    </div>
+
+    <div class="strategy-box" style="border-color:var(--blue);">
+      <h3>🔬 Phase 3：持续拓展（场景深耕）</h3>
+      <p style="font-size:0.85em;color:var(--text2);margin:8px 0;">教育场景 × 场景化包装</p>
+      <table class="data-table">
+        <tr><td style="color:var(--gold);font-weight:700;">📜 造纸/活字印刷</td><td>四大发明IP · B端研学渠道</td></tr>
+        <tr><td style="color:var(--gold);font-weight:700;">🏺 陶艺/泥塑</td><td>非遗泥人彩绘 · 材料复购</td></tr>
+        <tr><td style="color:var(--gold);font-weight:700;">✂️ 剪纸</td><td>大师联名 · 光影创新 · 补充线</td></tr>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <p>🏮 非遗DIY竞品调研 v1.0 | 8品类完整版 | 项目目录: ~/ich-diy-research/</p>
+    <p style="margin-top:6px;"><span class="highlight">核心发现：扎染+绒花/缠花+中国结 = 当前最佳切入窗口（品牌真空 + 低竞争 + 高增长）</span></p>
+  </div>
+
+</div>
+</body>
+</html>

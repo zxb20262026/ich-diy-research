@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>非遗DIY · 8品类季节性+电商节奏分析</title>
+<style>
+  :root {
+    --bg: #0d1117; --card: #161b22; --border: #30363d;
+    --text: #c9d1d9; --text2: #8b949e;
+    --green: #3fb950; --orange: #d29922; --red: #f85149;
+    --blue: #58a6ff; --purple: #bc8cff; --cyan: #39d2c0; --gold: #e3b341;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; line-height:1.6; }
+  .container { max-width:1300px; margin:0 auto; padding:20px; }
+
+  .header { background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460); border-bottom:3px solid var(--gold); padding:44px 20px; text-align:center; }
+  .header h1 { font-size:2.2em; background:linear-gradient(135deg,var(--gold),#f0c060,var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+  .nav-strip { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; padding:12px 0; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg); z-index:10; }
+  .nav-link { padding:5px 12px; border-radius:14px; font-size:0.78em; font-weight:600; color:var(--text2); text-decoration:none; border:1px solid transparent; cursor:pointer; transition:all 0.2s; }
+  .nav-link:hover { border-color:var(--gold); color:var(--gold); }
+
+  .section-title { font-size:1.5em; margin:36px 0 18px; padding-bottom:8px; border-bottom:2px solid var(--border); display:flex; align-items:center; gap:10px; }
+
+  /* Seasonality Heatmap */
+  .heatmap-wrap { overflow-x:auto; margin:16px 0; }
+  .heatmap { width:100%; border-collapse:collapse; font-size:0.85em; min-width:1000px; }
+  .heatmap th { background:#1c2533; padding:8px 6px; text-align:center; font-weight:600; font-size:0.8em; color:var(--text2); border-bottom:1px solid var(--border); }
+  .heatmap th.mon { width:7%; }
+  .heatmap th.cat { width:11%; text-align:left; padding-left:10px; }
+  .heatmap td { padding:6px; text-align:center; border-bottom:1px solid rgba(48,54,61,0.4); font-size:0.82em; }
+  .heatmap td.cat-name { text-align:left; padding-left:10px; font-weight:700; }
+
+  .h0 { background:transparent; color:var(--text2); }
+  .h1 { background:rgba(48,54,61,0.5); }
+  .h2 { background:rgba(88,166,255,0.15); }
+  .h3 { background:rgba(88,166,255,0.25); }
+  .h4 { background:rgba(63,185,80,0.2); }
+  .h5 { background:rgba(63,185,80,0.35); color:#fff; font-weight:600; }
+  .h6 { background:rgba(227,179,65,0.3); color:#fff; font-weight:700; }
+  .h7 { background:rgba(227,179,65,0.5); color:#fff; font-weight:700; }
+  .h8 { background:rgba(248,81,73,0.3); color:#fff; font-weight:700; }
+  .h9 { background:rgba(248,81,73,0.5); color:#fff; font-weight:700; }
+  .h10 { background:rgba(248,81,73,0.7); color:#fff; font-weight:800; }
+
+  /* Category detail block */
+  .cat-block { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; margin:20px 0; }
+  .cat-block.featured { border-color:var(--gold); }
+
+  .cat-header { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+  .cat-rank { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2em; flex-shrink:0; }
+  .r1 { background:linear-gradient(135deg,#e3b341,#f0c060); color:#0d1117; }
+  .r2 { background:linear-gradient(135deg,#c0c0c0,#d0d0d0); color:#0d1117; }
+  .r3 { background:linear-gradient(135deg,#cd7f32,#d4883d); color:#fff; }
+  .rn { background:rgba(139,148,158,0.2); color:var(--text2); }
+
+  .cat-header .cat-name { font-size:1.25em; font-weight:700; }
+  .cat-header .cat-tags { display:flex; gap:6px; margin-left:auto; }
+  .tag { display:inline-block; padding:3px 10px; border-radius:10px; font-size:0.75em; font-weight:600; }
+  .tag-peak { background:rgba(248,81,73,0.2); color:var(--red); border:1px solid rgba(248,81,73,0.3); }
+  .tag-steady { background:rgba(63,185,80,0.2); color:var(--green); border:1px solid rgba(63,185,80,0.3); }
+  .tag-growing { background:rgba(88,166,255,0.2); color:var(--blue); border:1px solid rgba(88,166,255,0.3); }
+
+  /* Calendar timeline */
+  .timeline { position:relative; display:flex; flex-wrap:nowrap; overflow-x:auto; gap:0; margin:16px 0; border-radius:10px; overflow:hidden; border:1px solid var(--border); }
+  .timeline .tl-month { flex:1; min-width:70px; padding:10px 4px; text-align:center; border-right:1px solid rgba(48,54,61,0.5); }
+  .timeline .tl-month:last-child { border-right:none; }
+  .tl-month .tl-label { font-size:0.75em; color:var(--text2); margin-bottom:4px; }
+  .tl-month .tl-heat { height:8px; border-radius:4px; margin:4px 0; }
+  .tl-month .tl-event { font-size:0.7em; color:var(--gold); margin-top:3px; }
+  .tl-month .tl-action { font-size:0.68em; color:var(--green); margin-top:2px; }
+
+  /* Metrics grid */
+  .metrics-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; margin:12px 0; }
+  .metric-card { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center; }
+  .metric-card .mc-val { font-size:1.4em; font-weight:700; }
+  .metric-card .mc-label { font-size:0.75em; color:var(--text2); margin-top:4px; }
+
+  /* Calendar grid */
+  .cal-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin:12px 0; }
+  .cal-card { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:8px; padding:14px; }
+  .cal-card .cc-month { font-weight:700; font-size:1em; margin-bottom:6px; }
+  .cal-card .cc-items { font-size:0.82em; color:var(--text2); line-height:1.6; }
+  .cal-card .cc-items span { color:var(--gold); }
+
+  .strategy-box { background:linear-gradient(135deg,rgba(63,185,80,0.06),rgba(88,166,255,0.06)); border:2px solid var(--border); border-radius:12px; padding:24px; margin:24px 0; }
+  .strategy-box h3 { font-size:1.15em; margin-bottom:12px; color:var(--gold); }
+
+  .footer { text-align:center; padding:30px; color:var(--text2); font-size:0.82em; border-top:1px solid var(--border); margin-top:40px; }
+
+  .text-gold { color:var(--gold); }
+  .text-green { color:var(--green); }
+  .text-red { color:var(--red); }
+  .text-blue { color:var(--blue); }
+  .text-cyan { color:var(--cyan); }
+
+  .highlight { color:var(--gold); font-weight:600; }
+  .warn { color:var(--red); font-weight:600; }
+
+  @media (max-width:768px) {
+    .heatmap { font-size:0.7em; }
+    .tl-month { min-width:50px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📅 非遗DIY · 8品类季节性深度分析</h1>
+  <p style="color:var(--text2);">搜索热度周期 · 电商运营节奏 · 备货推广日历</p>
+</div>
+
+<div class="nav-strip">
+  <a class="nav-link" href="#heatmap">🔥热度热力图</a>
+  <a class="nav-link" href="#c1">🥇刺绣</a>
+  <a class="nav-link" href="#c2">🥈扎染</a>
+  <a class="nav-link" href="#c3">🥉绒花/缠花</a>
+  <a class="nav-link" href="#c4">🌿香囊</a>
+  <a class="nav-link" href="#c5">🏺陶艺/泥塑</a>
+  <a class="nav-link" href="#c6">🪢中国结/绳编</a>
+  <a class="nav-link" href="#c7">📜造纸/活字</a>
+  <a class="nav-link" href="#c8">✂️剪纸</a>
+  <a class="nav-link" href="#calendar">📆运营日历</a>
+  <a class="nav-link" href="#summary">📊汇总</a>
+</div>
+
+<div class="container">
+
+  <!-- ============ MASTER HEATMAP ============ -->
+  <h2 class="section-title" id="heatmap">🔥 8品类 × 12月热度热力图（全览）</h2>
+  <p style="color:var(--text2);font-size:0.88em;margin-bottom:12px;">
+    热度等级：<span style="color:var(--text2);">0=冰点</span> → <span style="color:var(--blue);">1-3=低</span> → 
+    <span style="color:var(--green);">4-5=中</span> → <span style="color:var(--gold);">6-7=高</span> → 
+    <span class="warn">8-10=爆发</span>
+  </p>
+  <div class="heatmap-wrap">
+    <table class="heatmap">
+      <thead>
+        <tr>
+          <th class="cat">品类 / 热度→</th>
+          <th class="mon">1月</th><th class="mon">2月</th><th class="mon">3月</th>
+          <th class="mon">4月</th><th class="mon">5月</th><th class="mon">6月</th>
+          <th class="mon">7月</th><th class="mon">8月</th><th class="mon">9月</th>
+          <th class="mon">10月</th><th class="mon">11月</th><th class="mon">12月</th>
+          <th style="width:8%;">峰型</th>
+          <th style="width:12%;">峰值月</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cat-name">🥇 刺绣DIY</td>
+          <td class="h3">3</td><td class="h4">4</td><td class="h4">4</td>
+          <td class="h4">4</td><td class="h4">4</td><td class="h4">4</td>
+          <td class="h5">5</td><td class="h4">4</td><td class="h4">4</td>
+          <td class="h3">3</td><td class="h4">4</td><td class="h6">6</td>
+          <td style="color:var(--green);">平稳型</td><td style="color:var(--gold);">12月+7月</td>
+        </tr>
+        <tr>
+          <td class="cat-name">🥈 扎染DIY</td>
+          <td class="h1">1</td><td class="h2">2</td><td class="h3">3</td>
+          <td class="h5">5</td><td class="h7">7</td><td class="h8">8</td>
+          <td class="h9">9</td><td class="h6">6</td><td class="h4">4</td>
+          <td class="h2">2</td><td class="h1">1</td><td class="h1">1</td>
+          <td style="color:var(--red);">单峰型</td><td><span class="warn">5-7月</span></td>
+        </tr>
+        <tr>
+          <td class="cat-name">🥉 绒花/缠花</td>
+          <td class="h2">2</td><td class="h4">4</td><td class="h4">4</td>
+          <td class="h5">5</td><td class="h5">5</td><td class="h4">4</td>
+          <td class="h4">4</td><td class="h4">4</td><td class="h5">5</td>
+          <td class="h5">5</td><td class="h4">4</td><td class="h3">3</td>
+          <td style="color:var(--blue);">微双峰</td><td>4-5+9-10月</td>
+        </tr>
+        <tr>
+          <td class="cat-name">🌿 香囊DIY</td>
+          <td class="h1">1</td><td class="h1">1</td><td class="h1">1</td>
+          <td class="h2">2</td><td class="h9">9</td><td class="h10">10</td>
+          <td class="h1">1</td><td class="h1">1</td><td class="h1">1</td>
+          <td class="h1">1</td><td class="h1">1</td><td class="h1">1</td>
+          <td style="color:var(--red);"></td><td><span class="warn">5-6月端午</span></td>
+        </tr>
+        <tr>
+          <td class="cat-name">🏺 陶艺/泥塑</td>
+          <td class="h6">6</td><td class="h5">5</td><td class="h3">3</td>
+          <td class="h4">4</td><td class="h4">4</td><td class="h5">5</td>
+          <td class="h8">8</td><td class="h7">7</td><td class="h4">4</td>
+          <td class="h3">3</td><td class="h3">3</td><td class="h4">4</td>
+          <td style="color:var(--red);"></td><td><span class="warn">1月+7-8月</span></td>
+        </tr>
+        <tr>
+          <td class="cat-name">🪢 中国结/绳编</td>
+          <td class="h8">8</td><td class="h4">4</td><td class="h3">3</td>
+          <td class="h3">3</td><td class="h4">4</td><td class="h5">5</td>
+          <td class="h3">3</td><td class="h3">3</td><td class="h3">3</td>
+          <td class="h3">3</td><td class="h3">3</td><td class="h9">9</td>
+          <td style="color:var(--red);"></td><td><span class="warn">12-1月春节</span></td>
+        </tr>
+        <tr>
+          <td class="cat-name">📜 造纸/活字</td>
+          <td class="h5">5</td><td class="h4">4</td><td class="h2">2</td>
+          <td class="h3">3</td><td class="h4">4</td><td class="h5">5</td>
+          <td class="h8">8</td><td class="h7">7</td><td class="h4">4</td>
+          <td class="h3">3</td><td class="h2">2</td><td class="h3">3</td>
+          <td style="color:var(--red);"></td><td><span class="warn">7-8月暑假</span></td>
+        </tr>
+        <tr>
+          <td class="cat-name">✂️ 剪纸DIY</td>
+          <td class="h10">10</td><td class="h4">4</td><td class="h1">1</td>
+          <td class="h1">1</td><td class="h1">1</td><td class="h1">1</td>
+          <td class="h2">2</td><td class="h1">1</td><td class="h1">1</td>
+          <td class="h1">1</td><td class="h2">2</td><td class="h7">7</td>
+          <td style="color:var(--red);"></td><td><span class="warn">12-1月春节</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ CATEGORY DETAILS ============ -->
+
+  <!-- CAT 1: EMBROIDERY -->
+  <div class="section-title" id="c1"><span class="cat-rank r1">1</span>🥇 刺绣DIY — 平稳型，四季常青</div>
+  <div class="cat-block">
+    <div class="cat-header">
+      <span class="cat-name">刺绣材料包 · 季节特性</span>
+      <div class="cat-tags">
+        <span class="tag tag-steady">平稳型</span>
+        <span class="tag tag-growing">礼品场景</span>
+      </div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="mc-val" style="color:var(--green);">★★★★★</div><div class="mc-label">全年稳定性</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--orange);">2.0x</div><div class="mc-label">峰谷比（12月vs3月）</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--blue);">12月+7月</div><div class="mc-label">双微峰月份</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--text2);">春节+暑假</div><div class="mc-label">主要驱动事件</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--gold);">提前1月备货</div><div class="mc-label">推广启动节点</div></div>
+    </div>
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:0.85em;margin-top:12px;">
+      <tr style="background:#1c2533;"><th style="padding:8px;">时段</th><th style="padding:8px;">热度</th><th style="padding:8px;">驱动因素</th><th style="padding:8px;">运营动作</th></tr>
+      <tr><td>1-2月（春节）</td><td class="text-gold">中高 6-7</td><td>春节送礼、寒假手工</td><td>年货主题套件、拜年送礼场景</td></tr>
+      <tr><td>3-6月（春季）</td><td>中 4</td><td>日常手工、母亲节</td><td>母亲节专题（妈妈礼物）、春季花卉图案</td></tr>
+      <tr><td>7-8月（暑假）</td><td class="text-green">中高 5</td><td>学生暑假、亲子时间</td><td>亲子刺绣入门套件、暑假手工打卡</td></tr>
+      <tr><td>9-12月（秋冬）</td><td>中→高 3-6</td><td>双11→双12→年货</td><td>11月起加大推广，12月年货礼盒</td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:0.85em;color:var(--text2);">
+      <span class="highlight">特点：</span>8品类中<span class="text-green">季节性最弱</span>，全年可稳定销售。
+      唯一的两个微峰（12月+7月）也仅为基准的1.5-2倍，不会出现断崖式下跌。
+    </p>
+  </div>
+
+  <!-- CAT 2: TIE-DYE -->
+  <div class="section-title" id="c2"><span class="cat-rank r2">2</span>🥈 扎染DIY — 春夏单峰型，4-8月黄金窗口</div>
+  <div class="cat-block featured">
+    <div class="cat-header">
+      <span class="cat-name">扎染材料包 · 季节特性</span>
+      <div class="cat-tags">
+        <span class="tag tag-peak">单峰型</span>
+        <span class="tag tag-growing">户外场景</span>
+      </div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="mc-val" style="color:var(--red);">★★☆☆☆</div><div class="mc-label">全年稳定性</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--red);">9.0x</div><div class="mc-label">峰谷比（7月vs1月）</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--red);">5-7月</div><div class="mc-label">爆发高峰</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--text2);">T恤季节+暑假</div><div class="mc-label">驱动事件</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--gold);">3月开始预热</div><div class="mc-label">推广节奏</div></div>
+    </div>
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:0.85em;margin-top:12px;">
+      <tr style="background:#1c2533;"><th>时段</th><th>热度</th><th>驱动因素</th><th>运营动作</th></tr>
+      <tr><td>11-2月（冬季）</td><td class="text-red">极低 1-2</td><td>户外T恤无需求、低温不利染色</td><td>淡季养号，发内容蓄水</td></tr>
+      <tr><td>3-4月（春季回暖）</td><td class="text-blue">上升 3-5</td><td>T恤季节开启、春游场景</td><td><span class="highlight">3月初开始投放</span>，春季踏青主题</td></tr>
+      <tr><td>5-6月（初夏）</td><td class="text-gold">高峰 7-8</td><td>T恤旺季+五一假期+亲子</td><td>加大投放，亲子套装/闺蜜套装</td></tr>
+      <tr><td>7-8月（暑假）</td><td class="warn">峰值 9</td><td>暑假亲子手工、夏令营、研学</td><td><span class="warn">全年最高峰</span>，全力推广+备货</td></tr>
+      <tr><td>9-10月（秋季）</td><td>下降 2-4</td><td>天气转凉，户外减少</td><td>收尾促销，清理库存</td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:0.85em;color:var(--text2);">
+      <span class="highlight">⚠️ 核心提醒：</span>扎染是<span class="warn">8品类中季节性最强的品类之一</span>（峰谷比9x）。
+      <span class="text-green">3月启动推广→7月峰值→9月收尾</span>，全年有效销售窗口仅6个月。
+      冬季可考虑转型「扎染卫衣/秋冬布艺」但效果有限。
+    </p>
+  </div>
+
+  <!-- CAT 3: RONGHUA -->
+  <div class="section-title" id="c3"><span class="cat-rank r3">3</span>🥉 绒花/缠花 — 微双峰型，汉服活动驱动</div>
+  <div class="cat-block">
+    <div class="cat-header">
+      <span class="cat-name">绒花+缠花材料包 · 季节特性</span>
+      <div class="cat-tags">
+        <span class="tag tag-steady">微双峰</span>
+        <span class="tag tag-growing">汉服场景</span>
+      </div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="mc-val" style="color:var(--green);">★★★★☆</div><div class="mc-label">全年稳定性</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--text2);">2.5x</div><div class="mc-label">峰谷比（5月vs1月）</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--blue);">4-5月+9-10月</div><div class="mc-label">双峰月份</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--text2);">汉服活动/花朝节</div><div class="mc-label">驱动事件</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--gold);">季节影响较小</div><div class="mc-label">备货策略</div></div>
+    </div>
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:0.85em;margin-top:12px;">
+      <tr style="background:#1c2533;"><th>时段</th><th>热度</th><th>驱动因素</th><th>运营动作</th></tr>
+      <tr><td>1-2月（春节）</td><td>低 2-4</td><td>春节前送礼小幅上升</td><td>新年发簪主题套件</td></tr>
+      <tr><td>3-5月（春季）</td><td class="text-gold">中高 4-5</td><td>花朝节、汉服出行日、毕业季</td><td>花朝主题+毕业礼物场景</td></tr>
+      <tr><td>6-8月（夏季）</td><td>中 4</td><td>日常手作稳定</td><td>稳定推广，夏季轻盈款发饰</td></tr>
+      <tr><td>9-10月（秋季）</td><td class="text-gold">中高 5</td><td>中秋+国庆+汉服文化周</td><td>中秋/国庆主题，汉服活动联动</td></tr>
+      <tr><td>11-12月</td><td>中低 3-4</td><td>日常+圣诞/元旦小高峰</td><td>礼物场景，年末清仓</td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:0.85em;color:var(--text2);">
+      <span class="highlight">特点：</span>绒花/缠花是<span class="text-green">8品类中季节性最均衡的品类之一</span>（仅次于刺绣）。
+      春秋两季略高是汉服出行旺季，但<span class="text-green">全年可卖</span>。
+      内容端重点是<span class="highlight">汉服博主联动</span>，非节日依赖。
+    </p>
+  </div>
+
+  <!-- CAT 4: SACHET -->
+  <div class="section-title" id="c4"><span class="cat-rank rn">4</span>🌿 香囊DIY — 极端脉冲型，端午引爆</div>
+  <div class="cat-block featured">
+    <div class="cat-header">
+      <span class="cat-name">香囊材料包 · 季节特性</span>
+      <div class="cat-tags">
+        <span class="tag tag-peak">极端脉冲</span>
+        <span class="tag tag-peak">节日依赖</span>
+      </div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="mc-val" style="color:var(--red);">★☆☆☆☆</div><div class="mc-label">全年稳定性</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--red);">10.0x</div><div class="mc-label">峰谷比（6月vs平时）</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--red);">5月中旬-6月</div><div class="mc-label">爆发窗口</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--text2);">端午节</div><div class="mc-label">唯一驱动事件</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--gold);">4月中开始预热</div><div class="mc-label">推广节奏</div></div>
+    </div>
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:0.85em;margin-top:12px;">
+      <tr style="background:#1c2533;"><th>时段</th><th>热度</th><th>驱动因素</th><th>运营动作</th></tr>
+      <tr><td>1-4月中旬</td><td class="text-red">接近冰点 1-2</td><td>无节日关联</td><td><span class="highlight">打造「节气香囊」产品线</span>，用24节气破局</td></tr>
+      <tr><td>4月下旬-5月中旬</td><td class="text-blue">快速爬升 3-7</td><td>端午预热期</td><td><span class="warn">4月20日起加大投放</span>，提前占位搜索</td></tr>
+      <tr><td>5月下旬-6月</td><td class="warn">爆发 9-10</td><td>端午节（农历五月初五）</td><td><span class="warn">全力冲刺</span>，搜索竞价+直播+达人矩阵</td></tr>
+      <tr><td>7-12月</td><td class="text-red">冰点 1</td><td>无节日关联</td><td>节气香囊/养生香囊概念延续</td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:0.85em;color:var(--text2);">
+      <span class="highlight">⚠️ 核心策略：</span>香囊是<span class="warn">全品类季节波动最大的品类</span>（峰谷比10x）。
+      一年只做<span class="warn">一个半月</span>的生意。<br>
+      <span class="highlight">破局关键：</span>打造「<span class="text-gold">24节气香囊</span>」全年产品线（春·安神/夏·驱蚊/秋·润燥/冬·暖身），
+      把端午脉冲变成全年节奏。
+    </p>
+  </div>
+
+  <!-- CAT 5: POTTERY -->
+  <div class="section-title" id="c5"><span class="cat-rank rn">5</span>🏺 陶艺/泥塑 — 寒暑假双峰型，亲子驱动</div>
+  <div class="cat-block">
+    <div class="cat-header">
+      <span class="cat-name">陶艺+泥塑材料包 · 季节特性</span>
+      <div class="cat-tags">
+        <span class="tag tag-peak">双峰型</span>
+        <span class="tag tag-growing">亲子场景</span>
+      </div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="mc-val" style="color:var(--orange);">★★★☆☆</div><div class="mc-label">全年稳定性</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--orange);">2.7x</div><div class="mc-label">峰谷比（7月vs3月）</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--red);">1月+7-8月</div><div class="mc-label">双高峰月份</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--text2);">寒假+暑假</div><div class="mc-label">驱动事件</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--gold);">假期前1月备货</div><div class="mc-label">推广节奏</div></div>
+    </div>
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:0.85em;margin-top:12px;">
+      <tr style="background:#1c2533;"><th>时段</th><th>热度</th><th>驱动因素</th><th>运营动作</th></tr>
+      <tr><td>1月（寒假）</td><td class="text-gold">高峰 6</td><td>寒假亲子时间、春节</td><td>寒假手工套装，春节生肖主题</td></tr>
+      <tr><td>2-4月</td><td>中低 3-4</td><td>开学后热度下降</td><td>稳定推广，周末亲子场景</td></tr>
+      <tr><td>5-6月</td><td>中 4-5</td><td>六一儿童节、母亲节</td><td>儿童节礼物套装、母亲节心意卡</td></tr>
+      <tr><td>7-8月（暑假）</td><td class="warn">全年最高峰 7-8</td><td>暑假亲子、夏令营、研学</td><td><span class="warn">全力推广</span>，研学机构B端合作</td></tr>
+      <tr><td>9-12月</td><td>中低 3-4</td><td>日常，双11小高峰</td><td>双11/双12促销</td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:0.85em;color:var(--text2);">
+      <span class="highlight">特点：</span>寒暑假双峰清晰，峰谷比2.7x在可接受范围。
+      日常有亲子手工基本盘，不会完全冰点。<span class="text-green">暑假是绝对主战场</span>。
+    </p>
+  </div>
+
+  <!-- CAT 6: KNOT -->
+  <div class="section-title" id="c6"><span class="cat-rank rn">6</span>🪢 中国结/绳编 — 春节单峰+婚庆日常线</div>
+  <div class="cat-block">
+    <div class="cat-header">
+      <span class="cat-name">中国结+绳编材料包 · 季节特性</span>
+      <div class="cat-tags">
+        <span class="tag tag-peak">春节脉冲</span>
+        <span class="tag tag-steady">婚庆日常</span>
+      </div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="mc-val" style="color:var(--orange);">★★★☆☆</div><div class="mc-label">全年稳定性</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--red);">3.0x</div><div class="mc-label">峰谷比（12月vs3月）</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--red);">12-1月</div><div class="mc-label">春节高峰</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--text2);">春节+端午+婚庆</div><div class="mc-label">驱动事件</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--gold);">11月启动春节备货</div><div class="mc-label">推广节奏</div></div>
+    </div>
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:0.85em;margin-top:12px;">
+      <tr style="background:#1c2533;"><th>时段</th><th>热度</th><th>驱动因素</th><th>运营动作</th></tr>
+      <tr><td>11月-12月中旬</td><td class="text-blue">爬升 3-7</td><td>春节预热</td><td><span class="highlight">11月起加大投放</span>，年货中国结/本命年红绳</td></tr>
+      <tr><td>12月下旬-1月</td><td class="warn">爆发 8-9</td><td>春节+本命年+年终送礼</td><td><span class="warn">全年最高峰</span>，春节主题套装全力推广</td></tr>
+      <tr><td>2-4月</td><td>中低 3-4</td><td>春节后回落</td><td>婚庆场景（五一结婚季预热）</td></tr>
+      <tr><td>5-6月</td><td>中 4-5</td><td>端午五彩绳、毕业季</td><td>端午五彩绳DIY、毕业礼物手绳</td></tr>
+      <tr><td>7-10月</td><td>中 3</td><td>日常手作+国庆婚庆</td><td>国庆婚礼季、日常稳定</td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:0.85em;color:var(--text2);">
+      <span class="highlight">特点：</span>春节脉冲（峰谷比3x），但<span class="text-green">日常有婚庆/端午/本命年等场景支撑</span>，
+      不似香囊和剪纸那么极端。可以用「场景多样化」对冲季节性（高考祈福/本命年/婚礼/端午/日常手作）。
+    </p>
+  </div>
+
+  <!-- CAT 7: PAPER -->
+  <div class="section-title" id="c7"><span class="cat-rank rn">7</span>📜 花草纸/活字印刷 — 暑假单峰+开学季</div>
+  <div class="cat-block">
+    <div class="cat-header">
+      <span class="cat-name">造纸+活字印刷材料包 · 季节特性</span>
+      <div class="cat-tags">
+        <span class="tag tag-peak">暑假高峰</span>
+        <span class="tag tag-growing">教育场景</span>
+      </div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="mc-val" style="color:var(--orange);">★★★☆☆</div><div class="mc-label">全年稳定性</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--orange);">4.0x</div><div class="mc-label">峰谷比（7月vs3月）</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--red);">7-8月</div><div class="mc-label">绝对高峰</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--text2);">暑假+寒假</div><div class="mc-label">驱动事件</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--gold);">B端研学渠道</div><div class="mc-label">突破方向</div></div>
+    </div>
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:0.85em;margin-top:12px;">
+      <tr style="background:#1c2533;"><th>时段</th><th>热度</th><th>驱动因素</th><th>运营动作</th></tr>
+      <tr><td>1月（寒假）</td><td class="text-green">中高 5</td><td>寒假亲子、春节文化体验</td><td>寒假手工套装，迎春主题</td></tr>
+      <tr><td>2-4月</td><td>中低 2-3</td><td>开学后需求下降</td><td>学校/研学机构B端拓展</td></tr>
+      <tr><td>5-6月</td><td>中 4-5</td><td>六一+学校期末活动</td><td>学校团购、班级手工活动</td></tr>
+      <tr><td>7-8月（暑假）</td><td class="warn">全年最高峰 7-8</td><td>暑假亲子+夏令营+研学</td><td><span class="warn">全力推广</span>，研学机构合作、暑期活动</td></tr>
+      <tr><td>9-12月</td><td>中低 2-4</td><td>开学、国庆、寒假预热</td><td>开学季知识类产品、寒假预热</td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:0.85em;color:var(--text2);">
+      <span class="highlight">特点：</span>教育场景驱动，暑假是绝对主战场（峰谷比4x）。
+      <span class="highlight">B端突破口：</span>学校/研学机构/博物馆教育部门——可做B端大包装+教案配套，
+      对冲C端季节性波动。
+    </p>
+  </div>
+
+  <!-- CAT 8: PAPER CUT -->
+  <div class="section-title" id="c8"><span class="cat-rank rn">8</span>✂️ 剪纸DIY — 极端春节脉冲型</div>
+  <div class="cat-block">
+    <div class="cat-header">
+      <span class="cat-name">剪纸材料包 · 季节特性</span>
+      <div class="cat-tags">
+        <span class="tag tag-peak">极端脉冲</span>
+        <span class="tag tag-peak">春节依赖</span>
+      </div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="mc-val" style="color:var(--red);">★☆☆☆☆</div><div class="mc-label">全年稳定性</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--red);">10.0x</div><div class="mc-label">峰谷比（1月vs平时）</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--red);">12月下旬-1月</div><div class="mc-label">唯一爆发窗口</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--text2);">春节窗花</div><div class="mc-label">唯一驱动事件</div></div>
+      <div class="metric-card"><div class="mc-val" style="color:var(--gold);">11月启动预热</div><div class="mc-label">推广节奏</div></div>
+    </div>
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:0.85em;margin-top:12px;">
+      <tr style="background:#1c2533;"><th>时段</th><th>热度</th><th>驱动因素</th><th>运营动作</th></tr>
+      <tr><td>1-10月（非春节）</td><td class="text-red">冰点 1-2</td><td>几乎无人搜索「剪纸DIY」</td><td><span class="highlight">转型其他形态</span>：刻纸装饰画/LED光影剪纸</td></tr>
+      <tr><td>11月</td><td class="text-blue">开始爬升 2-4</td><td>春节预热</td><td><span class="warn">11月初开始投放</span>，提前占搜索位</td></tr>
+      <tr><td>12月</td><td class="text-gold">快速爬升 4-7</td><td>年货采购、寒假</td><td>年货主题剪纸套装</td></tr>
+      <tr><td>1月（春节前）</td><td class="warn">全年巅峰 10</td><td>春节窗花刚需</td><td><span class="warn">全力冲刺1个月</span></td></tr>
+      <tr><td>2月（春节后）</td><td>快速冷却 4</td><td>年后需求锐减</td><td>收尾，兼顾元宵节</td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:0.85em;color:var(--text2);">
+      <span class="highlight">⚠️ 核心判断：</span>剪纸是<span class="warn">全品类季节波动最大的品类</span>（与香囊并列峰谷比10x）。
+      一年只做<span class="warn">1个月</span>的生意。<br>
+      <span class="highlight">破局方向：</span>① 与非春节场景结合（刻纸装饰画、LED光影剪纸、非遗大师联名收藏款）
+      ② 拓展海外（春节出海：东南亚/海外华人市场）。
+    </p>
+  </div>
+
+  <!-- ============ OPERATION CALENDAR ============ -->
+  <h2 class="section-title" id="calendar">📆 电商运营日历 · 8品类全年节奏</h2>
+
+  <div class="cal-grid">
+    <div class="cal-card" style="border-left:3px solid var(--blue);">
+      <div class="cc-month">📅 1月 · 春节冲刺月</div>
+      <div class="cc-items">
+        <span>🔥</span> 剪纸爆发达峰值（春节窗花）<br>
+        <span>🔥</span> 中国结春节送礼高峰<br>
+        <span>🟡</span> 陶艺寒假亲子高峰<br>
+        <span>🟢</span> 刺绣年货套件<br>
+        <span>📦</span> 备货重点：剪纸+中国结
+      </div>
+    </div>
+    <div class="cal-card" style="border-left:3px solid var(--text2);">
+      <div class="cc-month">📅 2月 · 春节后回落</div>
+      <div class="cc-items">
+        <span>⬇️</span> 剪纸/中国结热度断崖下跌<br>
+        <span>🟢</span> 刺绣日常稳定<br>
+        <span>🟢</span> 绒花缠花春季预热<br>
+        <span>📦</span> 清理春节库存
+      </div>
+    </div>
+    <div class="cal-card" style="border-left:3px solid var(--green);">
+      <div class="cc-month">📅 3月 · 春季启动月</div>
+      <div class="cc-items">
+        <span>🚀</span> <b>扎染开始预热投放</b><br>
+        <span>🟢</span> 陶艺春季亲子<br>
+        <span>🟢</span> 绒花花朝节主题<br>
+        <span>📦</span> 扎染备货启动
+      </div>
+    </div>
+    <div class="cal-card" style="border-left:3px solid var(--green);">
+      <div class="cc-month">📅 4月 · 春季上升期</div>
+      <div class="cc-items">
+        <span>🔥</span> 扎染持续爬升<br>
+        <span>🚀</span> <b>香囊端午预热启动</b><br>
+        <span>🟢</span> 绒花春季高峰<br>
+        <span>📦</span> 香囊备货+扎染补货
+      </div>
+    </div>
+    <div class="cal-card" style="border-left:3px solid var(--red);">
+      <div class="cc-month">📅 5月 · 端午+初夏</div>
+      <div class="cc-items">
+        <span>🔥🔥</span> <b>香囊爆发爬升</b><br>
+        <span>🔥</span> 扎染初夏高峰<br>
+        <span>🟢</span> 绒花春季收尾<br>
+        <span>📦</span> 香囊全力备货
+      </div>
+    </div>
+    <div class="cal-card" style="border-left:3px solid var(--red);">
+      <div class="cc-month">📅 6月 · 端午+暑假预热</div>
+      <div class="cc-items">
+        <span>🔥🔥</span> <b>香囊端午爆发峰值</b><br>
+        <span>🔥</span> 扎染持续高峰<br>
+        <span>🚀</span> 陶艺/造纸暑假预热<br>
+        <span>📦</span> 暑假品类备货
+      </div>
+    </div>
+    <div class="cal-card" style="border-left:3px solid var(--red);">
+      <div class="cc-month">📅 7月 · 暑假爆发月</div>
+      <div class="cc-items">
+        <span>🔥🔥</span> <b>扎染全年最高峰</b><br>
+        <span>🔥🔥</span> <b>陶艺暑假高峰</b><br>
+        <span>🔥🔥</span> <b>造纸暑假高峰</b><br>
+        <span>📦</span> 三品类全力推广
+      </div>
+    </div>
+    <div class="cal-card" style="border-left:3px solid var(--red);">
+      <div class="cc-month">📅 8月 · 暑假高峰延续</div>
+      <div class="cc-items">
+        <span>🔥</span> 扎染/陶艺/造纸持续高峰<br>
+        <span>🚀</span> 秋季开学预热<br>
+        <span>📦</span> 国庆备货启动
+      </div>
+    </div>
+    <div class="cal-card" style="border-left:3px solid var(--text2);">
+      <div class="cc-month">📅 9月 · 秋季过渡</div>
+      <div class="cc-items">
+        <span>⬇️</span> 暑假品类回落<br>
+        <span>🟢</span> 绒花秋季微峰<br>
+        <span>🟢</span> 国庆婚庆中国结<br>
+        <span>📦</span> 清理暑假库存
+      </div>
+    </div>
+    <div class="cal-card" style="border-left:3px solid var(--gold);">
+      <div class="cc-month">📅 10月 · 国庆+双11预热</div>
+      <div class="cc-items">
+        <span>🟢</span> 绒花秋季微峰<br>
+        <span>🟢</span> 刺绣日常稳定<br>
+        <span>🚀</span> <b>双11开始预热</b><br>
+        <span>📦</span> 双11备货
+      </div>
+    </div>
+    <div class="cal-card" style="border-left:3px solid var(--gold);">
+      <div class="cc-month">📅 11月 · 双11+春节预热</div>
+      <div class="cc-items">
+        <span>🔥</span> <b>双11大促</b><br>
+        <span>🚀</span> <b>中国结交春节预热</b><br>
+        <span>🚀</span> <b>剪纸交春节预热</b><br>
+        <span>📦</span> 春节品类全力备货
+      </div>
+    </div>
+    <div class="cal-card" style="border-left:3px solid var(--red);">
+      <div class="cc-month">📅 12月 · 春节冲刺月</div>
+      <div class="cc-items">
+        <span>🔥🔥</span> <b>中国结全年最高峰</b><br>
+        <span>🔥🔥</span> <b>剪纸爆发爬升</b><br>
+        <span>🔥</span> <b>双12</b>+刺绣年货<br>
+        <span>📦</span> 春节三品类全力推广
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SEASONALITY SUMMARY ============ -->
+  <h2 class="section-title" id="summary">📊 季节性总结 + 电商策略</h2>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="strategy-box" style="border-color:var(--green);">
+      <h3>🟢 四季常青型（稳定基本盘）</h3>
+      <table class="data-table" style="width:100%;">
+        <tr><td>🥇 刺绣DIY</td><td>峰谷比 2.0x</td><td>全年稳定，微峰双12+暑假</td></tr>
+        <tr><td>🥉 绒花/缠花</td><td>峰谷比 2.5x</td><td>全年可卖，春秋微峰</td></tr>
+      </table>
+      <p style="font-size:0.82em;color:var(--text2);margin-top:8px;">👉 这两个品类是<span class="text-green">店铺基本盘</span>，可全年稳定引流+复购</p>
+    </div>
+
+    <div class="strategy-box" style="border-color:var(--red);">
+      <h3>🔴 脉冲爆发型（抓住窗口期）</h3>
+      <table class="data-table" style="width:100%;">
+        <tr><td>🌿 香囊</td><td>峰谷比 10x</td><td>5-6月端午单点爆发</td></tr>
+        <tr><td>✂️ 剪纸</td><td>峰谷比 10x</td><td>12-1月春节单点爆发</td></tr>
+        <tr><td>🥈 扎染</td><td>峰谷比 9x</td><td>4-8月春夏单峰</td></tr>
+        <tr><td>🪢 中国结/绳编</td><td>峰谷比 3x</td><td>12-1月春节+日常婚庆</td></tr>
+        <tr><td>📜 造纸/活字</td><td>峰谷比 4x</td><td>7-8月暑假+寒假</td></tr>
+        <tr><td>🏺 陶艺/泥塑</td><td>峰谷比 2.7x</td><td>1月+7-8月寒暑假</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="strategy-box" style="border-color:var(--gold);">
+    <h3>🎯 电商运营核心策略</h3>
+    <table class="data-table" style="width:100%;margin-top:10px;">
+      <thead>
+        <tr><th>策略</th><th>执行</th><th>针对品类</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="text-green">🎪 品类轮动制</span></td>
+          <td>不同季节主推不同品类：春→扎染/绒花、夏→扎染/陶艺/造纸、秋→绒花/刺绣、冬→中国结/剪纸/刺绣</td>
+          <td>全部8品类</td>
+        </tr>
+        <tr>
+          <td><span class="text-gold">📦 脉冲品类备货</span></td>
+          <td>香囊4月初备货、剪纸11月初备货、中国结11月备货——提前2个月锁定供应链</td>
+          <td>香囊/剪纸/中国结</td>
+        </tr>
+        <tr>
+          <td><span class="text-blue">🔄 日常化产品线</span></td>
+          <td>将脉冲品类延伸出日常款：香囊→24节气系列、剪纸→装饰画系列</td>
+          <td>香囊/剪纸</td>
+        </tr>
+        <tr>
+          <td><span class="text-cyan">🏫 B端对冲</span></td>
+          <td>开发学校/研学机构B端渠道，利用暑假/寒假集中采购，对冲C端季节性</td>
+          <td>陶艺/造纸/扎染</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ MONTHLY HEAT SUMMARY ============ -->
+  <h2 class="section-title">🌡️ 8品类综合热度月历（叠加视角）</h2>
+  <p style="color:var(--text2);font-size:0.88em;margin-bottom:12px;">如果你同时做8个品类，每个月的"总热度"分布——决定团队资源分配</p>
+  <div class="heatmap-wrap">
+    <table class="heatmap">
+      <thead>
+        <tr>
+          <th class="cat">维度</th>
+          <th>1月</th><th>2月</th><th>3月</th><th>4月</th><th>5月</th><th>6月</th><th>7月</th><th>8月</th><th>9月</th><th>10月</th><th>11月</th><th>12月</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cat-name">综合热度</td>
+          <td class="h7"><b>40</b></td><td class="h4">28</td><td class="h3">20</td><td class="h4">28</td><td class="h5">38</td>
+          <td class="h6">41</td><td class="h7"><b>50</b></td><td class="h5">38</td><td class="h4">28</td><td class="h4">24</td><td class="h4">24</td><td class="h6"><b>45</b></td>
+        </tr>
+        <tr>
+          <td class="cat-name">主推品类数</td>
+          <td>4</td><td>1</td><td>1</td><td>2</td><td>3</td><td>3</td><td>4</td><td>3</td><td>1</td><td>1</td><td>2</td><td>3</td>
+        </tr>
+        <tr>
+          <td class="cat-name">资源投入</td>
+          <td class="h7">高</td><td>低</td><td>低</td><td>中</td><td class="h5">高</td><td class="h6">高</td><td class="h8">极高</td><td class="h5">高</td><td>低</td><td>低</td><td>中</td><td class="h7">高</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:0.85em;color:var(--text2);margin-top:8px;">
+    <span class="highlight">全年三个超级高峰：</span>
+    <span class="warn">1月（春节档）</span> · <span class="warn">6-7月（端午+暑假档）</span> · <span class="warn">12月（年货档）</span><br>
+    <span class="highlight">全年两个淡季：</span>3月 · 9-11月（适合新品研发+内容蓄水+供应链优化）
+  </p>
+
+  <div class="footer">
+    <p>🏮 非遗DIY · 8品类季节性深度分析 v1.0</p>
+    <p>项目: <a href="https://github.com/zxb20262026/ich-diy-research" style="color:var(--blue);">github.com/zxb20262026/ich-diy-research</a></p>
+    <p style="margin-top:6px;">📊 报告列表：总览 → 竞品调研 → 季节性分析</p>
+  </div>
+
+</div>
+</body>
+</html>
